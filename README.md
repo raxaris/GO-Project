@@ -21,3 +21,6 @@ Create a PostgreSQL database.
 
 5. **Access the Application:**
 The server will be running at http://127.0.0.1:8080.
+
+6. **Visit the web-page:**
+The webpage will be running at http://127.0.0.1:5500.
