@@ -26,4 +26,4 @@ The server will be running at http://127.0.0.1:8080.
 The webpage will be running at http://127.0.0.1:5500.
 
 ## Screenshot:
-![First Page Screenshot](https://ibb.co.com/8NP7M4Q)
+https://ibb.co.com/8NP7M4Q
