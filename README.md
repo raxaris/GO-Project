@@ -2,10 +2,8 @@
 # Project Name: Raxar Games Launcher
 ### Project Description
 Raxar Games Launcher is a project that serves as a game launcher allowing users to register, delete, and update participants. It provides a user-friendly interface for managing game-related tasks.
-### Getting Started
-Follow these steps to launch the application:
 
-## Getting Started
+### Getting Started
 Follow these steps to launch the application:
 
 1. **Install GORM:**
