@@ -4,6 +4,8 @@ go 1.21.5
 
 require github.com/lib/pq v1.10.9
 
+require github.com/gorilla/mux v1.8.1 // indirect
+
 require (
 	cloud.google.com/go v0.111.0 // indirect
 	cloud.google.com/go/compute v1.23.3 // indirect
@@ -127,7 +129,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/rqlite/gorqlite v0.0.0-20231117160833-4e4ea5aa6d88 // indirect
-	github.com/rs/cors v1.10.1 // indirect
+	github.com/rs/cors v1.10.1
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/snowflakedb/gosnowflake v1.7.1 // indirect
