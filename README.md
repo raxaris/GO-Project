@@ -1,4 +1,3 @@
-﻿# GO-Assignment2
 # Project Name: Raxar Games Launcher
 ### Project Description
 Raxar Games Launcher is a project that serves as a game launcher allowing users to register, delete, and update participants. It provides a user-friendly interface for managing game-related tasks.
