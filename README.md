@@ -1,6 +1,6 @@
-# Project Name: Raxar Games Launcher
+# Project Name: DNK Tours
 ### Project Description
-Raxar Games Launcher is a project that serves as a game launcher allowing users to register, delete, and update participants. It provides a user-friendly interface for managing game-related tasks.
+DNK Tour - Travel Agency Application – your one-stop solution for planning and booking personalized tours around the world.
 
 ### Getting Started
 Follow these steps to launch the application:
