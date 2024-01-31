@@ -25,6 +25,23 @@ type User struct {
 	Role     string `json:"role"`
 }
 
+type Country struct {
+	ID   uint   `json:"id"`
+	Name string `json:"name"`
+}
+
+type City struct {
+	ID        uint   `json:"id"`
+	CountryID uint   `json:"country_id"`
+	Name      string `json:"name"`
+}
+
+type Hotel struct {
+	ID     uint   `json:"id"`
+	CityID uint   `json:"city_id"`
+	Name   string `json:"name"`
+}
+
 func initDB() {
 	dsn := "host=localhost user=postgres password=123 dbname=registration sslmode=disable"
 	var err error
@@ -261,15 +278,10 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(matchingTours) == 0 {
-		response := map[string]interface{}{
-			"success": false,
-			"message": "No matching tours found",
-		}
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(response)
+		responseError(w, http.StatusBadRequest, "No tours found")
 	} else {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(matchingTours)
+		responseSuccess(w, "Tours found", matchingTours)
 	}
 }
 
@@ -329,6 +341,71 @@ func findMatchingTours(sort, country, city, hotel, arrival, departure string, ad
 func calculateTotalPrice(hotelPrice, adults, children int) int {
 	totalPrice := hotelPrice * (adults + children/2)
 	return totalPrice
+}
+
+// data
+func getData(w http.ResponseWriter, r *http.Request) {
+
+	countries, err := getAllCountries()
+	if err != nil {
+		responseError(w, http.StatusInternalServerError, "Cannot access countries data")
+		return
+	}
+
+	cities, err := getAllCities()
+	if err != nil {
+		responseError(w, http.StatusInternalServerError, "Cannot access cities data")
+		return
+	}
+
+	hotels, err := getAllHotels()
+	if err != nil {
+		responseError(w, http.StatusInternalServerError, "Cannot access hotels data")
+		return
+	}
+
+	data := map[string]interface{}{
+		"countries": countries,
+		"cities":    cities,
+		"hotels":    hotels,
+	}
+
+	log.Printf("Retrieved data: %+v", data)
+
+	responseJSON, err := json.Marshal(data)
+	if err != nil {
+		responseError(w, http.StatusInternalServerError, "Error marshalling data")
+		return
+	}
+
+	responseSuccess(w, "Data Sent", responseJSON)
+}
+
+func getAllCountries() ([]Country, error) {
+	var countries []Country
+	query := "SELECT id, name FROM countries"
+	if err := db.Raw(query).Scan(&countries).Error; err != nil {
+		return nil, err
+	}
+	return countries, nil
+}
+
+func getAllCities() ([]City, error) {
+	var cities []City
+	query := "SELECT id, name, country_id FROM cities"
+	if err := db.Raw(query).Scan(&cities).Error; err != nil {
+		return nil, err
+	}
+	return cities, nil
+}
+
+func getAllHotels() ([]Hotel, error) {
+	var hotels []Hotel
+	query := "SELECT id, name, city_id FROM hotels"
+	if err := db.Raw(query).Scan(&hotels).Error; err != nil {
+		return nil, err
+	}
+	return hotels, nil
 }
 
 // serve pages
@@ -406,6 +483,7 @@ func main() {
 	travelRouter := r.PathPrefix("/travel").Subrouter()
 	travelRouter.HandleFunc("/tours", serveToursPage).Methods("GET")
 	travelRouter.HandleFunc("/search", searchHandler).Methods("GET")
+	travelRouter.HandleFunc("/data", getData).Methods("GET")
 
 	//static files
 	r.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))

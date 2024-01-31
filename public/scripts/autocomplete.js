@@ -12,19 +12,15 @@ let hotelInput;
 
 function fetchData(url) {
     return new Promise((resolve, reject) => {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    var data = JSON.parse(xhr.responseText);
-                    resolve(data);
-                } else {
-                    reject('Failed to fetch data. Status code: ' + xhr.status);
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data. Status code: ' + response.status);
                 }
-            }
-        };
-        xhr.open('GET', url, true);
-        xhr.send();
+                return response.json();
+            })
+            .then(data => resolve(data))
+            .catch(error => reject(error));
     });
 }
 
@@ -32,7 +28,7 @@ async function fetchDataAndProcess(url) {
     try {
         const data = await fetchData(url);
         console.log(url);
-        responseData = data;
+       
         console.log('Data:', data);
 
         availableCountries = responseData.countries.map(country => country.name);
@@ -177,4 +173,4 @@ function updateAvailableHotels(cityName) {
     availableHotels = selectedCity ? selectedCity.hotels.map(hotel => hotel.name) : [];
 }
 
-fetchDataAndProcess('http://localhost:3000/travel/data');
+fetchDataAndProcess('http://localhost:8080/travel/data');
