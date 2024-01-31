@@ -1,7 +1,10 @@
 let responseData = null;
 let availableCountries = [];
+let allCountries = []
 let availableCities = [];
+let allCities = []
 let availableHotels = [];
+let allHotels = []
 let countryResultBox;
 let cityResultBox;
 let hotelResultBox;
@@ -28,16 +31,25 @@ async function fetchDataAndProcess(url) {
     try {
         const data = await fetchData(url);
         console.log(url);
-       
-        console.log('Data:', data);
+        //take data from data
+        responseData = data.data;
+        allCountries = responseData.countries;
+        allCities = responseData.cities;
+        allHotels = responseData.hotels;
+        //check logs
+        console.log('Countries:', allCountries);
+        console.log('Cities:', allCities);
+        console.log('Hotels:', allHotels);
 
-        availableCountries = responseData.countries.map(country => country.name);
+        availableCountries = allCountries.map(country => country.name);
         console.log(availableCountries);
+
         setupEventListeners();
     } catch (error) {
         console.error(error);
     }
 }
+
 function setupEventListeners() {
     countryResultBox = document.querySelector(".country-result-box");
     countryInput = document.getElementById("countryInput");
@@ -71,7 +83,7 @@ function setupEventListeners() {
 
         updateAvailableCities(country);
         console.log(availableCities);
-        
+
         let result = [];
         let input = cityInput.value;
 
@@ -122,55 +134,55 @@ function setupEventListeners() {
     }
 }
 
-function displayCountry(result){
-    const content = result.map((list)=>{
+function displayCountry(result) {
+    const content = result.map((list) => {
         return "<li onclick=selectCountryInput(this)>" + list + "</li>";
     })
 
     countryResultBox.innerHTML = "<ul>" + content.join('') + "</ul>"
 }
 
-function selectCountryInput(list){
+function selectCountryInput(list) {
     countryInput.value = list.innerHTML;
     countryResultBox.innerHTML = ""
 }
 
-function displayCity(result){
-    const content = result.map((list)=>{
+function displayCity(result) {
+    const content = result.map((list) => {
         return "<li onclick=selectCityInput(this)>" + list + "</li>";
     })
 
     cityResultBox.innerHTML = "<ul>" + content.join('') + "</ul>"
 }
 
-function selectCityInput(list){
+function selectCityInput(list) {
     cityInput.value = list.innerHTML;
     cityResultBox.innerHTML = ""
 }
 
-function displayHotel(result){
-    const content = result.map((list)=>{
+function displayHotel(result) {
+    const content = result.map((list) => {
         return "<li onclick=selectHotelInput(this)>" + list + "</li>";
     })
 
     hotelResultBox.innerHTML = "<ul>" + content.join('') + "</ul>"
 }
 
-function selectHotelInput(list){
+function selectHotelInput(list) {
     hotelInput.value = list.innerHTML;
     hotelResultBox.innerHTML = ""
 }
 
 function updateAvailableCities(countryName) {
-    const selectedCountry = responseData.countries.find(country => country.name === countryName);
-    availableCities = selectedCountry ? selectedCountry.cities.map(city => city.name) : [];
+    const selectedCountry = allCountries.find(country => country.name === countryName);
+    availableCities = selectedCountry ? allCities.filter(city => city.countryID === selectedCountry.id).map(city => city.name) : [];
+    console.log("cities", availableCities);
 }
 
-function updateAvailableHotels(cityName) {
-    const selectedCity = responseData.countries.flatMap(country => country.cities)
-        .find(city => city.name === cityName);
-
-    availableHotels = selectedCity ? selectedCity.hotels.map(hotel => hotel.name) : [];
+  function updateAvailableHotels(cityName) {
+    const selectedCity = allCities.find(city => city.name === cityName);
+    availableHotels = selectedCity ? allHotels.filter(hotel => hotel.cityID === selectedCity.id).map(hotel => hotel.name) : [];
+    console.log("hotels", availableHotels);
 }
 
 fetchDataAndProcess('http://localhost:8080/travel/data');

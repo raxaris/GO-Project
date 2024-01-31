@@ -345,7 +345,6 @@ func calculateTotalPrice(hotelPrice, adults, children int) int {
 
 // data
 func getData(w http.ResponseWriter, r *http.Request) {
-
 	countries, err := getAllCountries()
 	if err != nil {
 		responseError(w, http.StatusInternalServerError, "Cannot access countries data")
@@ -364,21 +363,42 @@ func getData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var formattedCountries []map[string]interface{}
+	for _, country := range countries {
+		formattedCountry := map[string]interface{}{
+			"id":   country.ID,
+			"name": country.Name,
+		}
+		formattedCountries = append(formattedCountries, formattedCountry)
+	}
+
+	var formattedCities []map[string]interface{}
+	for _, city := range cities {
+		formattedCity := map[string]interface{}{
+			"id":        city.ID,
+			"countryID": city.CountryID,
+			"name":      city.Name,
+		}
+		formattedCities = append(formattedCities, formattedCity)
+	}
+
+	var formattedHotels []map[string]interface{}
+	for _, hotel := range hotels {
+		formattedHotel := map[string]interface{}{
+			"id":     hotel.ID,
+			"cityID": hotel.CityID,
+			"name":   hotel.Name,
+		}
+		formattedHotels = append(formattedHotels, formattedHotel)
+	}
+
 	data := map[string]interface{}{
-		"countries": countries,
-		"cities":    cities,
-		"hotels":    hotels,
+		"countries": formattedCountries,
+		"cities":    formattedCities,
+		"hotels":    formattedHotels,
 	}
 
-	log.Printf("Retrieved data: %+v", data)
-
-	responseJSON, err := json.Marshal(data)
-	if err != nil {
-		responseError(w, http.StatusInternalServerError, "Error marshalling data")
-		return
-	}
-
-	responseSuccess(w, "Data Sent", responseJSON)
+	responseSuccess(w, "Data Sent", data)
 }
 
 func getAllCountries() ([]Country, error) {
