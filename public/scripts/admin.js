@@ -61,15 +61,14 @@ async function updateUser(usernameInputId, emailInputId, passwordInputId) {
             email: email,
             password: password
         };
-
-        const response = await fetch('/updateUser', {
+        console.log(userData)
+        const response = await fetch('/admin/updateUser', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(userData),
         });
-
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -85,7 +84,7 @@ async function updateUser(usernameInputId, emailInputId, passwordInputId) {
 
 async function deleteUser(userEmail) {
     try {
-        const response = await fetch(`/deleteUser?email=${encodeURIComponent(userEmail)}`, {
+        const response = await fetch(`/admin/deleteUser?email=${encodeURIComponent(userEmail)}`, {
             method: 'DELETE',
         });
 
@@ -126,7 +125,7 @@ async function search() {
 
 async function getUsers() {
     try {
-        const response = await fetch('/getAllUsers');
+        const response = await fetch('/admin/getAllUsers');
         
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -142,7 +141,7 @@ async function getUsers() {
 
 async function getUserById(id) {
     try {
-        const response = await fetch(`/getUserByID?id=${encodeURIComponent(id)}`);
+        const response = await fetch(`/admin/getUserByID?id=${encodeURIComponent(id)}`);
         
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);

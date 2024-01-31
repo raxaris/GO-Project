@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const formElement = document.getElementById('formLogin');
+    const formElement = document.getElementById('signUpForm');
     console.log(formElement);
 
     formElement.addEventListener('submit', async (event) => {
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         console.log(JSON.stringify(body));
-        fetch("/login", {
+        fetch("/registration", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -23,12 +23,8 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
-            if (data.status === 200 || data.status === "success") {
-                if (data.admin) {
-                    window.location.href = "/admin";
-                } else {
-                    window.location.href = "/travel";
-                }
+            if (data.status === 'success') {
+                window.location.href = "/login";
             } else {
                 alertMSG(data.message, "danger");
             }
