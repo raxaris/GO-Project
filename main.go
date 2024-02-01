@@ -12,11 +12,16 @@ import (
 
 	"github.com/go-resty/resty/v2"
 	"github.com/gorilla/mux"
+	"github.com/rifflock/lfshook"
+	"github.com/sirupsen/logrus"
+	"golang.org/x/time/rate"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 var db *gorm.DB
+var logger *logrus.Logger
+var limiter = rate.NewLimiter(1, 3)
 
 type User struct {
 	gorm.Model
@@ -73,13 +78,37 @@ func initDB() {
 	db.AutoMigrate(&User{})
 }
 
+func initLogger() {
+	logger = logrus.New()
+	logger.SetLevel(logrus.DebugLevel)
+	logFilePath := "log/logs.log"
+	fileHook := lfshook.NewHook(lfshook.PathMap{
+		logrus.InfoLevel:  logFilePath,
+		logrus.ErrorLevel: logFilePath,
+		logrus.FatalLevel: logFilePath,
+		logrus.PanicLevel: logFilePath,
+		logrus.DebugLevel: logFilePath,
+	}, &logrus.JSONFormatter{})
+
+	logger.AddHook(fileHook)
+}
+
 // create
 func createUser(user *User) error {
 	return db.Create(user).Error
 }
 
 func registration(w http.ResponseWriter, r *http.Request) {
+	if !limiter.Allow() {
+		http.Error(w, "Rate limit exceeded", http.StatusTooManyRequests)
+		return
+	}
+
 	var newUser User
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "registration",
+	}).Info("User sent data")
 
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&newUser)
@@ -119,6 +148,10 @@ func registration(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "registration",
+	}).Info("User successfully registered")
 	responseSuccess(w, "User successfully registered", newUser)
 }
 
@@ -136,6 +169,11 @@ func isEmailTaken(email string) bool {
 
 // read
 func getUserByID(w http.ResponseWriter, r *http.Request) {
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "getUserByID",
+	}).Info("Admin requested user data")
+
 	userID := r.URL.Query().Get("id")
 	id, err := strconv.Atoi(userID)
 	if err != nil {
@@ -150,10 +188,20 @@ func getUserByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "getUserByID",
+	}).Info("Data was succesfully sent")
+
 	responseSuccess(w, "success", user)
 }
 
 func getAllUsers(w http.ResponseWriter, r *http.Request) {
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "getAllUsers",
+	}).Info("Admin requested all users' data")
+
 	var users []User
 	err := db.Find(&users).Error
 	if err != nil {
@@ -162,11 +210,19 @@ func getAllUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "getAllUsers",
+	}).Info("Data was succesfully sent")
 	responseSuccess(w, "success", users)
 }
 
 // update
 func updateUser(w http.ResponseWriter, r *http.Request) {
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "updateUser",
+	}).Info("Admin updates user's data")
 
 	var updatedUser User
 	decoder := json.NewDecoder(r.Body)
@@ -191,26 +247,45 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responseSuccess(w, "User updated successfully", updatedUser)
-	fmt.Println("User updated successfully")
-	fmt.Println(updatedUser.Email)
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "updateUser",
+	}).Info("User updated sucessfully")
 }
 
 // delete
 func deleteUser(w http.ResponseWriter, r *http.Request) {
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "deleteUser",
+	}).Info("Admin deletes user's data")
+
 	email := r.URL.Query().Get("email")
-	fmt.Println(email)
 	err := db.Where("email = ?", email).Delete(&User{}).Error
 	if err != nil {
 		log.Fatal(err)
 		responseError(w, http.StatusInternalServerError, "Error deleting user")
 		return
 	}
-	fmt.Println("User deleted successfully")
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "deleteUser",
+	}).Info("User deleted successfully")
 	responseSuccess(w, "User deleted successfully", email)
 }
 
 // login
 func login(w http.ResponseWriter, r *http.Request) {
+	if !limiter.Allow() {
+
+		http.Error(w, "Rate limit exceeded", http.StatusTooManyRequests)
+		return
+	}
+
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "login",
+	}).Info("Login request")
 
 	var loginData struct {
 		Login    string `json:"login"`
@@ -234,7 +309,11 @@ func login(w http.ResponseWriter, r *http.Request) {
 			"status": 200,
 			"admin":  isAdmin,
 		}
-		fmt.Print(res)
+
+		logger.WithFields(logrus.Fields{
+			"module":   "main",
+			"function": "login",
+		}).Info("User sucessfully logged in")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(res)
 	} else {
@@ -255,8 +334,17 @@ func checkUserRoleIsAdmin(username string) bool {
 
 // travel
 func searchHandler(w http.ResponseWriter, r *http.Request) {
-	queryParams := r.URL.Query()
+	if !limiter.Allow() {
+		http.Error(w, "Rate limit exceeded", http.StatusTooManyRequests)
+		return
+	}
 
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "searchHandler",
+	}).Info("User requests tours data")
+
+	queryParams := r.URL.Query()
 	country := queryParams.Get("country")
 	city := queryParams.Get("city")
 	hotel := queryParams.Get("hotel")
@@ -308,7 +396,11 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 	if len(matchingTours) == 0 {
 		responseError(w, http.StatusBadRequest, "No tours found")
 	} else {
-		w.Header().Set("Content-Type", "application/json")
+		logger.WithFields(logrus.Fields{
+			"module":   "main",
+			"function": "searchHandler",
+		}).Info("Tours were found")
+
 		responseSuccess(w, "Tours found", matchingTours)
 	}
 }
@@ -329,7 +421,6 @@ func findMatchingTours(sort, countryName, cityName, hotelName, arrival, departur
 		if err != nil {
 			return tours, errors.New(err.Error())
 		}
-		fmt.Print("country", country)
 
 		query = query.Where("tours.country_id = ?", country.ID)
 	}
@@ -339,7 +430,6 @@ func findMatchingTours(sort, countryName, cityName, hotelName, arrival, departur
 		if err != nil {
 			return tours, errors.New(err.Error())
 		}
-		fmt.Print("city", city)
 
 		query = query.Where("tours.city_id = ?", city.ID)
 	}
@@ -349,7 +439,6 @@ func findMatchingTours(sort, countryName, cityName, hotelName, arrival, departur
 		if err != nil {
 			return tours, errors.New(err.Error())
 		}
-		fmt.Print("hotel", hotel)
 
 		query = query.Where("tours.hotel_id = ?", hotel.ID)
 	}
@@ -374,7 +463,7 @@ func findMatchingTours(sort, countryName, cityName, hotelName, arrival, departur
 		switch sort {
 		case "asc":
 			query = query.Order("price ASC")
-		case "desc":
+		case "dsc":
 			query = query.Order("price DESC")
 		default:
 			return nil, errors.New("invalid sort value")
@@ -383,7 +472,14 @@ func findMatchingTours(sort, countryName, cityName, hotelName, arrival, departur
 
 	query = query.Offset(offset).Limit(limit)
 
-	fmt.Printf("country: %v, city: %v, hotel: %v, arrival: %v, departure: %v\n", country, city, hotel, arrival, departure)
+	logger.WithFields(logrus.Fields{
+		"country":   country,
+		"city":      city,
+		"hotel":     hotel,
+		"arrival":   arrival,
+		"departure": departure,
+		"sort":      sort,
+	}).Info("User request")
 
 	if err := query.Find(&tours).Error; err != nil {
 		return nil, fmt.Errorf("error executing database query: %v", err)
@@ -540,31 +636,49 @@ func getHotelByName(hotelName string) (Hotel, error) {
 
 // serve pages
 func serveLoginPage(w http.ResponseWriter, r *http.Request) {
+	logger.WithFields(logrus.Fields{
+		"module": "main",
+	}).Info("User visits login page")
 	filePath := filepath.Join("view", "login.html")
 	http.ServeFile(w, r, filePath)
 }
 
 func serveRegistrationPage(w http.ResponseWriter, r *http.Request) {
+	logger.WithFields(logrus.Fields{
+		"module": "main",
+	}).Info("User visits registration page")
 	filePath := filepath.Join("view", "registration.html")
 	http.ServeFile(w, r, filePath)
 }
 
 func serveAdminPage(w http.ResponseWriter, r *http.Request) {
+	logger.WithFields(logrus.Fields{
+		"module": "main",
+	}).Info("Admin visits admin page")
 	filePath := filepath.Join("view", "admin.html")
 	http.ServeFile(w, r, filePath)
 }
 
 func serveHomePage(w http.ResponseWriter, r *http.Request) {
+	logger.WithFields(logrus.Fields{
+		"module": "main",
+	}).Info("User visits home page")
 	filePath := filepath.Join("view", "home.html")
 	http.ServeFile(w, r, filePath)
 }
 
 func serveTravelPage(w http.ResponseWriter, r *http.Request) {
+	logger.WithFields(logrus.Fields{
+		"module": "main",
+	}).Info("User visits travel page")
 	filePath := filepath.Join("view", "index.html")
 	http.ServeFile(w, r, filePath)
 }
 
 func serveToursPage(w http.ResponseWriter, r *http.Request) {
+	logger.WithFields(logrus.Fields{
+		"module": "main",
+	}).Info("User visits tours page")
 	filePath := filepath.Join("view", "search.html")
 	http.ServeFile(w, r, filePath)
 }
@@ -586,6 +700,7 @@ func responseSuccess(w http.ResponseWriter, message string, data interface{}) {
 
 func main() {
 	initDB()
+	initLogger()
 
 	r := mux.NewRouter()
 	//create/register

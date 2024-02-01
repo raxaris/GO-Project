@@ -1,0 +1,68 @@
+{"level":"info","module":"main","msg":"User visits home page","time":"2024-02-01T23:39:05+06:00"}
+{"level":"info","module":"main","msg":"User visits travel page","time":"2024-02-01T23:39:10+06:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-02-01T23:39:11+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:39:11+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:39:13+06:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-02-01T23:42:07+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:42:07+06:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","time":"2024-02-01T23:42:07+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:42:09+06:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-02-01T23:42:58+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:42:58+06:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","time":"2024-02-01T23:42:58+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:42:59+06:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-02-01T23:48:24+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:48:25+06:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-02-01T23:48:25+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:48:26+06:00"}
+{"level":"info","module":"main","msg":"User visits home page","time":"2024-02-01T23:48:30+06:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-02-01T23:48:34+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:48:34+06:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-02-01T23:48:40+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:48:40+06:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-02-01T23:48:40+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:48:41+06:00"}
+{"level":"info","module":"main","msg":"User visits travel page","time":"2024-02-01T23:48:43+06:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-02-01T23:48:47+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:48:47+06:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-02-01T23:48:47+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:48:47+06:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-02-01T23:48:53+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:48:53+06:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-02-01T23:48:53+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:48:54+06:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-02-01T23:48:59+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:48:59+06:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"asc","time":"2024-02-01T23:48:59+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:49:00+06:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-02-01T23:49:02+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:49:02+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:49:35+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:50:25+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:50:31+06:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"asc","time":"2024-02-01T23:50:31+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:50:32+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:50:49+06:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"dsc","time":"2024-02-01T23:50:49+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:50:49+06:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-02-01T23:50:55+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:50:56+06:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"dsc","time":"2024-02-01T23:50:56+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:50:56+06:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-02-01T23:51:01+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:51:01+06:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-02-01T23:51:01+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:51:03+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:51:06+06:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-02-01T23:51:06+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:51:07+06:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-02-01T23:51:14+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:51:14+06:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"asc","time":"2024-02-01T23:51:14+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:51:15+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:51:19+06:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"asc","time":"2024-02-01T23:51:19+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:51:20+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-02-01T23:51:23+06:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"asc","time":"2024-02-01T23:51:23+06:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-02-01T23:51:24+06:00"}

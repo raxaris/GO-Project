@@ -131,6 +131,7 @@ require (
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
+	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
 	github.com/rqlite/gorqlite v0.0.0-20231117160833-4e4ea5aa6d88 // indirect
 	github.com/rs/cors v1.10.1
 	github.com/shopspring/decimal v1.3.1 // indirect
