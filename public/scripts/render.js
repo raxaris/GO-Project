@@ -1,14 +1,49 @@
+function setInitialFilterValues() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const countryInput = document.getElementById("countryInput");
+    const countryParam = urlParams.get("country");
+    if (countryParam) {
+        countryInput.value = countryParam;
+    }
+
+    const cityInput = document.getElementById("cityInput");
+    const cityParam = urlParams.get("city");
+    if (cityParam) {
+        cityInput.value = cityParam;
+    }
+
+
+    const hotelInput = document.getElementById("hotelInput");
+    const hotelParam = urlParams.get("hotel");
+    if (hotelParam) {
+        hotelInput.value = hotelParam;
+    }
+
+    const dateRangeInput = document.getElementById("dateRange");
+    const dateRangeParam = urlParams.get("dateRange");
+    if (dateRangeParam) {
+        dateRangeInput.value = dateRangeParam;
+    }
+
+    const adultsInput = document.getElementById("adults");
+    const adultsParam = urlParams.get("adults");
+    if (adultsParam) {
+        adultsInput.value = adultsParam;
+    }
+
+    const childrenInput = document.getElementById("children");
+    const childrenParam = urlParams.get("children");
+    if (childrenParam) {
+        childrenInput.value = childrenParam;
+    }
+}
+
 async function renderCart(data) {
     const tours = data;
-    console.log("tourdata", data);
     const tourContainer = document.querySelector(".tours");
-
     tourContainer.innerHTML = "";
-
-    const weatherPromises = tours.map(async (tour) => {
-
-        const weatherData = await getWeatherData(tour.city);
-
+    for (const tour of tours) {
         const tourElement = document.createElement("div");
         tourElement.classList.add("row", "p-0");
 
@@ -17,20 +52,20 @@ async function renderCart(data) {
                 <div class="list-items">
                     <div class="tour-container row">
                         <div class="tour-image col-3">
-                            <img src="${tour.img}" style="max-width: 300px;">
+                            <img src="${tour.img}" style="width: 300px; height: 200px">
                         </div>
                         <div class="tour-info col-9">
-                            <div class="item-hotel"><span class="item-brand">${tour.hotel}</span></div>
+                            <div class="item-hotel"><span class="item-hotel">${tour.hotel}</span></div>
                             <div class="item-location">
                                 <span class="tour-country">${tour.country}</span>,
                                 <span class="tour-city"> ${tour.city}</span>,
-                                <span class="tour-condition"> ${weatherData.condition}</span> <span class="tour-temp"> ${weatherData.temperature}°C</span>
+                                <span class="tour-condition"> ${configureCondition(tour.condition)}</span> <span class="tour-temp"> ${tour.temperature}°C</span>
                             </div>
                             <div class="item-date">
-                                <div class="arrival">Arrival Date: <span class="date-arrival">${tour.arrival}</span></div>    
-                                <div class="departure">Departure Date: <span class="date-arrival">${tour.departure}</span></div>    
+                                <div class="arrival"><span class="date-arrival">${formatDateString(tour.date_arrival)}</span> 🛬</div>    
+                                <div class="departure"><span class="date-arrival">${formatDateString(tour.date_departure)}</span> 🛫 </div>    
                             </div>  
-                            <div class="people">
+                            <div class="adultsandchildren">
                                 <div class="adults">&#x1F465:  ${tour.adults}</div> 
                                 ${tour.children > 0 ? `<div class="children">&#x1F9D2: ${tour.children}</div>` : ''}
                             </div>
@@ -43,9 +78,7 @@ async function renderCart(data) {
         `;
 
         tourContainer.appendChild(tourElement);
-    });
-
-    await Promise.all(weatherPromises);
+    }
 
     const amountOfTours = document.getElementById("amountOfTours");
     amountOfTours.textContent = tours.length;
@@ -53,22 +86,26 @@ async function renderCart(data) {
     plural.textContent = tours.length === 1 ? "" : "s";
 }
 
+
 async function renderPage() {
     try {
         const queryString = window.location.search;
         console.log(queryString);
         const serverURL = `http://localhost:8080/travel/search${queryString}`;
         console.log(serverURL);
-        
         const data = await getDataFromServer(serverURL);
-        console.log("query Data", data);
-        renderCart(data);
+        document.getElementById('loadingBarContainer').style.display = 'none';
+        console.log("query Data", data.data);
+        
+        renderCart(data.data);
     } catch (error) {
         console.error("Error rendering page:", error);
+        document.getElementById('loadingBarContainerr').style.display = 'none';
     }
 }
 
 window.addEventListener('load', async () => {
+    setInitialFilterValues();
     await renderPage();
 });
 
@@ -88,14 +125,26 @@ async function getDataFromServer(url) {
     }
 }
 
-async function getWeatherData(city){
-    try {
-        const serverURL = "http://localhost:8080/travel/weather";
-        const response = await fetch(`${serverURL}?city=${city}`);
-        const data = await response.json();
-        console.log(data);
-        return data;
-    } catch (error) {
-        console.error('Error fetching weather data:', error);
+function configureCondition(condition) {
+    condition = condition.toLowerCase();
+
+    if (condition.includes("snow")) {
+        return "&#x1F328";
+    } else if (condition.includes("mist") || condition.includes("fog")) {
+        return "&#x1F32B;";
+    } else if (condition.includes("sunny") || condition.includes("clear")) {
+        return "&#x2600";
+    } else if (condition.includes("cloud") || condition.includes("overcast")) {
+        return "&#x2601";
+    } else if (condition.includes("rain") || condition.includes("thunder")) {
+        return "&#x1F327;";
+    } else {
+        return "&#x2600";
     }
+}
+
+function formatDateString(dateString) {
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
+    return formattedDate;
 }

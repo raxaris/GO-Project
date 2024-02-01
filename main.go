@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"strconv"
 
+	"github.com/go-resty/resty/v2"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -40,6 +41,25 @@ type Hotel struct {
 	ID     uint   `json:"id"`
 	CityID uint   `json:"city_id"`
 	Name   string `json:"name"`
+}
+
+type Tour struct {
+	Country       string  `json:"country"`
+	City          string  `json:"city"`
+	Hotel         string  `json:"hotel"`
+	DateArrival   string  `json:"date_arrival"`
+	DateDeparture string  `json:"date_departure"`
+	Adults        int     `json:"adults"`
+	Children      int     `json:"children"`
+	Price         int     `json:"price"`
+	Img           string  `json:"img"`
+	Temperature   float64 `json:"temperature"`
+	Condition     string  `json:"condition"`
+}
+
+type WeatherData struct {
+	Temperature float64 `json:"temperature"`
+	Condition   string  `json:"condition"`
 }
 
 func initDB() {
@@ -285,33 +305,59 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func findMatchingTours(sort, country, city, hotel, arrival, departure string, adults, children int) ([]map[string]interface{}, error) {
-	var tours []map[string]interface{}
-
+func findMatchingTours(sort, countryName, cityName, hotelName, arrival, departure string, adults, children int) ([]Tour, error) {
+	var tours []Tour
+	var country string
+	var city string
+	var hotel string
 	query := db.Table("tours").
-		Select("tours.*, countries.name as country_name, cities.name as city_name, hotels.name as hotel_name, hotels.price as hotel_price, hotels.img as hotel_img").
-		Joins("JOIN countries ON tours.country_id = countries.id").
+		Select("countries.name as country, cities.name as city, hotels.name as hotel, tours.date_arrival, tours.date_departure, tours.adults, tours.children, CAST(hotels.price * (tours.adults + 0.5 * tours.children) AS INTEGER) as price, hotels.img").
+		Joins("JOIN hotels ON tours.hotel_id = hotels.id").
 		Joins("JOIN cities ON tours.city_id = cities.id").
-		Joins("JOIN hotels ON tours.hotel_id = hotels.id")
+		Joins("JOIN countries ON tours.country_id = countries.id")
 
-	if country != "" {
-		query = query.Where("countries.name = ?", country)
+	if countryName != "" {
+		country, err := getCountryByName(countryName)
+		if err != nil {
+			return tours, errors.New(err.Error())
+		}
+		fmt.Print("country", country)
+
+		query = query.Where("tours.country_id = ?", country.ID)
 	}
-	if city != "" {
-		query = query.Where("cities.name = ?", city)
+
+	if cityName != "" {
+		city, err := getCityByName(cityName)
+		if err != nil {
+			return tours, errors.New(err.Error())
+		}
+		fmt.Print("city", city)
+
+		query = query.Where("tours.city_id = ?", city.ID)
 	}
-	if hotel != "" {
-		query = query.Where("hotels.name = ?", hotel)
+
+	if hotelName != "" {
+		hotel, err := getHotelByName(hotelName)
+		if err != nil {
+			return tours, errors.New(err.Error())
+		}
+		fmt.Print("hotel", hotel)
+
+		query = query.Where("tours.hotel_id = ?", hotel.ID)
 	}
+
 	if arrival != "" {
 		query = query.Where("tours.date_arrival = ?", arrival)
 	}
+
 	if departure != "" {
 		query = query.Where("tours.date_departure = ?", departure)
 	}
+
 	if adults != 0 {
 		query = query.Where("tours.adults = ?", adults)
 	}
+
 	if children != 0 {
 		query = query.Where("tours.children = ?", children)
 	}
@@ -319,28 +365,60 @@ func findMatchingTours(sort, country, city, hotel, arrival, departure string, ad
 	if sort != "" {
 		switch sort {
 		case "asc":
-			query = query.Order("hotel_price ASC")
+			query = query.Order("price ASC")
 		case "desc":
-			query = query.Order("hotel_price DESC")
+			query = query.Order("price DESC")
 		default:
 			return nil, errors.New("invalid sort value")
 		}
 	}
 
+	fmt.Printf("country: %v, city: %v, hotel: %v, arrival: %v, departure: %v\n", country, city, hotel, arrival, departure)
+
 	if err := query.Find(&tours).Error; err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error executing database query: %v", err)
 	}
 
 	for i := range tours {
-		tours[i]["total_price"] = calculateTotalPrice(tours[i]["hotel_price"].(int), tours[i]["adults"].(int), tours[i]["children"].(int))
+		weatherData := getWeatherByCity(tours[i].City)
+		tours[i].Temperature = weatherData.Temperature
+		tours[i].Condition = weatherData.Condition
 	}
 
 	return tours, nil
 }
 
-func calculateTotalPrice(hotelPrice, adults, children int) int {
-	totalPrice := hotelPrice * (adults + children/2)
-	return totalPrice
+// weather
+func getWeatherByCity(city string) WeatherData {
+	apiKey := "7f1beacb3f1e4513aef90038241901"
+	units := "metric"
+
+	client := resty.New()
+	response, err := client.R().
+		SetQueryParams(map[string]string{
+			"key":   apiKey,
+			"units": units,
+			"q":     city,
+		}).
+		Get("http://api.weatherapi.com/v1/current.json")
+
+	if err != nil {
+		fmt.Println("Error making the request:", err)
+		return WeatherData{}
+	}
+
+	var data map[string]interface{}
+	if err := json.Unmarshal(response.Body(), &data); err != nil {
+		fmt.Println("Error decoding JSON:", err)
+		return WeatherData{}
+	}
+
+	weatherData := WeatherData{
+		Temperature: data["current"].(map[string]interface{})["temp_c"].(float64),
+		Condition:   data["current"].(map[string]interface{})["condition"].(map[string]interface{})["text"].(string),
+	}
+
+	return weatherData
 }
 
 // data
@@ -426,6 +504,28 @@ func getAllHotels() ([]Hotel, error) {
 		return nil, err
 	}
 	return hotels, nil
+}
+
+func getItemByName(tableName, columnName, itemName string, item interface{}) error {
+	return db.Table(tableName).Where(columnName+" = ?", itemName).First(item).Error
+}
+
+func getCountryByName(countryName string) (Country, error) {
+	var country Country
+	err := getItemByName("countries", "name", countryName, &country)
+	return country, err
+}
+
+func getCityByName(cityName string) (City, error) {
+	var city City
+	err := getItemByName("cities", "name", cityName, &city)
+	return city, err
+}
+
+func getHotelByName(hotelName string) (Hotel, error) {
+	var hotel Hotel
+	err := getItemByName("hotels", "name", hotelName, &hotel)
+	return hotel, err
 }
 
 // serve pages

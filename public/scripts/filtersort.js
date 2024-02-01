@@ -132,6 +132,16 @@ function setupEventListeners() {
             hotelResultBox.innerHTML = '';
         }
     }
+
+
+    sortingResultBox = document.querySelector(".sort-result-box");
+    sortingInput = document.getElementById("sortInput");
+
+    sortingInput.onclick = function () {
+        let result = ["Ascending", "Descending"];
+        displaySort(result);
+
+    }
 }
 
 function displayCountry(result) {
@@ -173,16 +183,32 @@ function selectHotelInput(list) {
     hotelResultBox.innerHTML = ""
 }
 
+function displaySort(result) {
+    const content = result.map((list) => {
+        return "<li onclick=selectSortInput(this)>" + list + "</li>";
+    })
+
+    sortingResultBox.innerHTML = "<ul>" + content.join('') + "</ul>"
+}
+
+function selectSortInput(list) {
+    sortingInput.value = list.innerHTML;
+    sortingResultBox.innerHTML = ""
+}
+
+
 function updateAvailableCities(countryName) {
     const selectedCountry = allCountries.find(country => country.name === countryName);
     availableCities = selectedCountry ? allCities.filter(city => city.countryID === selectedCountry.id).map(city => city.name) : [];
     console.log("cities", availableCities);
 }
 
-  function updateAvailableHotels(cityName) {
+function updateAvailableHotels(cityName) {
     const selectedCity = allCities.find(city => city.name === cityName);
     availableHotels = selectedCity ? allHotels.filter(hotel => hotel.cityID === selectedCity.id).map(hotel => hotel.name) : [];
     console.log("hotels", availableHotels);
 }
 
-fetchDataAndProcess('http://localhost:8080/travel/data');
+document.addEventListener('DOMContentLoaded', function() {
+    fetchDataAndProcess('http://localhost:8080/travel/data');
+});

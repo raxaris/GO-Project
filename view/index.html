@@ -87,7 +87,7 @@
                     <div class="filter-row">
                         <div>
                             <div class="filter-box white">
-                                <div class="dropdown">
+                                <div class="dropdown-main">
                                     <input type="text" id="countryInput" placeholder="&#x1F5FB Country" autocomplete="off"> 
                                 </div>
                             </div>
@@ -98,7 +98,7 @@
                         
                         <div>
                             <div class="filter-box white">
-                                <div class="dropdown">
+                                <div class="dropdown-main">
                                     <input type="text" id="cityInput" placeholder="&#128509 City" autocomplete="off">
                                     <div class="dropdown-content">
                                     </div>
@@ -111,7 +111,7 @@
 
                         <div>
                             <div class="filter-box white">
-                                <div class="dropdown">
+                                <div class="dropdown-main">
                                     <input type="text" id="hotelInput" placeholder="&#127976 Hotel" autocomplete="off">
                                     <div class="dropdown-content">
                                     </div>
@@ -127,11 +127,11 @@
                         </div>
                 
                         <div class="filter-box white people">
-                            <div class="persons-input">
-                                <input type="number" id="adults" placeholder="&#x1F465 Adults">
+                            <div class="persons-input right-border">
+                                <input type="number" id="adults" placeholder="&#x1F465">
                             </div>
-                            <div class="persons-input">
-                                <input type="number" id="children" placeholder="&#x1F9D2 Children">
+                            <div class="persons-input ms-2">
+                                <input type="number" id="children" placeholder="&#x1F9D2">
                             </div>
                         </div>
                 
@@ -220,7 +220,7 @@
             minDate: "today",
         });
     </script>
-    <script src="../public/scripts/autocomplete.js"></script>
+    <script src="../public/scripts/filter.js"></script>
     <script src="../public/scripts/customalert.js"></script>
     <script src="../public/scripts/searchTours.js"></script>
 </body>
