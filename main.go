@@ -265,6 +265,10 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 	adultsStr := queryParams.Get("adults")
 	childrenStr := queryParams.Get("children")
 	sort := queryParams.Get("sort")
+	page := queryParams.Get("page")
+
+	limit := 4
+	offset := 0
 
 	var adults int
 	if adultsStr != "" {
@@ -290,7 +294,11 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 		children = 0
 	}
 
-	matchingTours, err := findMatchingTours(sort, country, city, hotel, arrival, departure, adults, children)
+	if p, err := strconv.Atoi(page); err == nil && p > 1 {
+		offset = (p - 1) * limit
+	}
+
+	matchingTours, err := findMatchingTours(sort, country, city, hotel, arrival, departure, adults, children, limit, offset)
 
 	if err != nil {
 		responseError(w, http.StatusBadRequest, "Error while parsing tours")
@@ -305,7 +313,7 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func findMatchingTours(sort, countryName, cityName, hotelName, arrival, departure string, adults, children int) ([]Tour, error) {
+func findMatchingTours(sort, countryName, cityName, hotelName, arrival, departure string, adults, children, limit, offset int) ([]Tour, error) {
 	var tours []Tour
 	var country string
 	var city string
@@ -372,6 +380,8 @@ func findMatchingTours(sort, countryName, cityName, hotelName, arrival, departur
 			return nil, errors.New("invalid sort value")
 		}
 	}
+
+	query = query.Offset(offset).Limit(limit)
 
 	fmt.Printf("country: %v, city: %v, hotel: %v, arrival: %v, departure: %v\n", country, city, hotel, arrival, departure)
 

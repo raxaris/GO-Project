@@ -37,12 +37,8 @@ async function fetchDataAndProcess(url) {
         allCities = responseData.cities;
         allHotels = responseData.hotels;
         //check logs
-        console.log('Countries:', allCountries);
-        console.log('Cities:', allCities);
-        console.log('Hotels:', allHotels);
 
         availableCountries = allCountries.map(country => country.name);
-        console.log(availableCountries);
 
         setupEventListeners();
     } catch (error) {
@@ -61,7 +57,6 @@ function setupEventListeners() {
             result = availableCountries.filter((keyword) => {
                 return keyword.toLowerCase().includes(input.toLowerCase());
             });
-            console.log(result);
         }
         displayCountry(result);
 
@@ -82,7 +77,7 @@ function setupEventListeners() {
         }
 
         updateAvailableCities(country);
-        console.log(availableCities);
+    
 
         let result = [];
         let input = cityInput.value;

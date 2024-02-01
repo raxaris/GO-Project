@@ -38,7 +38,29 @@ function setInitialFilterValues() {
         childrenInput.value = childrenParam;
     }
 }
-
+async function renderPagination(){
+    const paginationContainer = document.querySelector(".pagination")
+    paginationContainer.innerHTML = `
+    <nav class="pagination-outer" aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item">
+                <a href="#" class="page-link" aria-label="Previous">
+                    <span aria-hidden="true">«</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item active"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item">
+                <a href="#" class="page-link" aria-label="Next">
+                    <span aria-hidden="true">»</span>
+                </a>
+            </li>
+        </ul>
+    </nav>` 
+}
 async function renderCart(data) {
     const tours = data;
     const tourContainer = document.querySelector(".tours");
@@ -87,11 +109,17 @@ async function renderCart(data) {
 }
 
 
-async function renderPage() {
+async function renderPage(page) {
     try {
+        simulateLoading();
+        document.getElementById('loadingBarContainer').style.display = 'block';
         const queryString = window.location.search;
-        console.log(queryString);
-        const serverURL = `http://localhost:8080/travel/search${queryString}`;
+        let serverURL;
+        if(queryString){
+            serverURL = `http://localhost:8080/travel/search${queryString}&page=${page}`;
+        } else {
+            serverURL = `http://localhost:8080/travel/search?page=${page}`
+        }
         console.log(serverURL);
         const data = await getDataFromServer(serverURL);
         document.getElementById('loadingBarContainer').style.display = 'none';
@@ -99,14 +127,14 @@ async function renderPage() {
         
         renderCart(data.data);
     } catch (error) {
-        console.error("Error rendering page:", error);
-        document.getElementById('loadingBarContainerr').style.display = 'none';
+        alertMSG("Error rendering page", "danger")
+        document.getElementById('loadingBarContainer').style.display = 'none';
     }
 }
 
 window.addEventListener('load', async () => {
     setInitialFilterValues();
-    await renderPage();
+    await renderPage(1);
 });
 
 async function getDataFromServer(url) {
@@ -114,13 +142,14 @@ async function getDataFromServer(url) {
         const response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            alertMSG("No tours available", "danger")
         }
 
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error("Error fetching data:", error);
+        alertMSG("Error fetching data", "danger")
+        document.getElementById('loadingBarContainer').style.display = 'none';
         throw error;
     }
 }
@@ -147,4 +176,25 @@ function formatDateString(dateString) {
     const options = { day: 'numeric', month: 'long', year: 'numeric' };
     const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
     return formattedDate;
+}
+
+function alertMSG(msg, alertType) {
+    const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+    const appendAlert = (message, type) => {
+        const wrapper = document.createElement('div')
+        wrapper.innerHTML = [
+          `<div class="alert alert-${type} alert-dismissible" role="alert" style="width: 400px;">`,
+          `   <div>${message}</div>`,
+          '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+          '</div>'
+        ].join('')
+      
+        alertPlaceholder.append(wrapper)
+    }
+
+    setTimeout(function() {
+        bootstrap.Alert.getOrCreateInstance(document.querySelector(".alert")).close();
+    }, 2000)
+
+    appendAlert(msg, alertType);
 }

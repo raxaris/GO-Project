@@ -21,6 +21,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="../public/css/style.css">
     <title>DNK</title>
 </head>
 
@@ -79,7 +80,7 @@
             <div class="filter container p-0">
                 <div class="filter-row">
                     <div>
-                        <div class="filter-box white">
+                        <div class="filter-box-poppins white">
                             <div class="dropdown">
                                 &#x1F5FB <input type="text" id="countryInput" placeholder=" Country" autocomplete="off">
                             </div>
@@ -90,7 +91,7 @@
                     </div>
 
                     <div>
-                        <div class="filter-box white">
+                        <div class="filter-box-poppins white">
                             <div class="dropdown">
                                 &#128509 <input type="text" id="cityInput" placeholder=" City" autocomplete="off">
                                 <div class="dropdown-content">
@@ -103,7 +104,7 @@
                     </div>
 
                     <div>
-                        <div class="filter-box white">
+                        <div class="filter-box-poppins white">
                             <div class="dropdown">
                                 &#127976 <input type="text" id="hotelInput" placeholder=" Hotel" autocomplete="off">
                                 <div class="dropdown-content">
@@ -115,32 +116,32 @@
                         </div>
                     </div>
 
-                    <div class="filter-box white">
+                    <div class="filter-box-poppins white">
                         <div class="dateRange"><input type="custom-datetime" id="dateRange" placeholder="&#x1F4C5 Date">
                         </div>
                     </div>
 
-                    <div class="filter-box white people">
-                        <div class="persons-input right-border">
+                    <div class="filter-box-poppins white people">
+                        <div class="persons-input right-border pe-2">
                             &#x1F465 <input type="number" id="adults">
                         </div>
-                        <div class="persons-input ms-2">
+                        <div class="persons-input ps-2">
                             &#x1F9D2<input type="number" id="children">
                         </div>
                     </div>
 
                     <div>
-                        <div class="filter-box white sorting">
+                        <div class="filter-box-poppins white sorting">
                             <div class="sort-input">
                                 <input type="text" id="sortInput" placeholder="&#x1F4B2 Sort"
-                                    style="cursor: pointer; width: 100%;" readonly">
+                                    style="cursor: pointer; width: 100%;" readonly contenteditable="false"">
                             </div>
                         </div>
                         <div class="sort-result-box">
 
                         </div>
                     </div>
-                    <div class="filter-box blue" onclick="updateTours()">
+                    <div class="filter-box-poppins blue" onclick="updateTours()">
                         Search
                     </div>
                 </div>
@@ -158,59 +159,13 @@
                     <div id="loadingBarContainer">
                         <div id="loadingBar" style="width: 0;"></div>
                     </div>
-                    <!-- <div class="row p-0">
-                                <div class="inner-list mb-3">
-                                    <div class="list-items">
-                                        <div class="tour-container row">
-                                            <div class="tour-image col-3">
-                                                <img src="{{IMAGE_SRC}}" style="max-width: 300px;;">
-                                            </div>
-                                            <div class="tour-info col-9">
-                                                <div class="item-hotel"><span class="item-brand">{{HOTEL_NAME}}</span></div>
-                                                <div class="item-location"><span class="tour-country">{{COUNTRY_NAME}}</span>, <span class="tour-city"> {{CITY_NAME}}</span></div>
-                                                <div class="item-date">
-                                                    <div class="arrival">Arrival Date: <span class="date-arrival">{{ARRIVAL_DATE}}</span></div>    
-                                                    <div class="departure">Departure Date: <span class="date-arrival">{{DEPARTURE_DATE}}</span></div>    
-                                                </div>  
-                                                <div class="adultsandchildren">
-                                                    <div class="adults">&#x1F9D2:  {{ADULTS}}</div>
-                                                    <div class="children">&#x1F465:   {{CHILDREN}}</div>
-                                                </div>
-                                                <div class="item-price">Total Price: <span class="tour-price">{{TOTAL_PRICE}}</span>$</div>
-                                            </div> 
-                                        </div>
-                                    </div>
-                                    <hr class="solid liner mt-4">
-                                </div>
-                            </div>
-                            <div class="row p-0">
-                                <div class="inner-list mb-3">
-                                    <div class="list-items">
-                                        <div class="tour-container row">
-                                            <div class="tour-image col-3">
-                                                <img src="{{IMAGE_SRC}}" style="max-width: 300px;;">
-                                            </div>
-                                            <div class="tour-info col-9">
-                                                <div class="item-hotel"><span class="item-brand">{{HOTEL_NAME}}</span></div>
-                                                <div class="item-location"><span class="tour-country">{{COUNTRY_NAME}}</span>, <span class="tour-city"> {{CITY_NAME}}</span></div>
-                                                <div class="item-date">
-                                                    <div class="arrival">Arrival Date: <span class="date-arrival">{{ARRIVAL_DATE}}</span></div>    
-                                                    <div class="departure">Departure Date: <span class="date-arrival">{{DEPARTURE_DATE}}</span></div>    
-                                                </div>  
-                                                <div class="people">
-                                                    <div class="adults">&#x1F9D2:  {{ADULTS}}</div>
-                                                    <div class="children">&#x1F465:   {{CHILDREN}}</div>
-                                                </div>
-                                                <div class="item-price">Total Price: <span class="tour-price">{{TOTAL_PRICE}}</span>$</div>
-                                            </div> 
-                                        </div>
-                                    </div>
-                                    <hr class="solid liner my-4">
-                                </div>
-                            </div> -->
                 </div>
             </div>
-        </div>
+            <div class="pagination pt-3" id="pagination">
+                <button id="prevBtn" onclick="prevPage()" style="width: 7%; margin: 5px 2px ; cursor: pointer;">Previous</button>
+                <button id="currentPage" style="width: 5%; margin: 5px 2px ; cursor: pointer;">1</button>
+                <button id="nextBtn" onclick="nextPage()" style="width: 7%; margin: 5px 2px ; cursor: pointer;">Next</button>
+            </div>
         </div>
     </main>
     <hr class="solid liner mt-3">
@@ -255,7 +210,8 @@
                     <label for="emailID" class="form-label form-title" style="font-size: 20px;
                         font-weight: 600;">Email address</label>
                     <input type="email" class="form-control my-2" id="emailID" placeholder="name@example.com">
-                    <button onclick="validateEmail()" type="submit" class="btn my-1" style="background-color: rgb(34, 189, 189);color: white;" id="emailSubmit">Subscribe</button>
+                    <button onclick="validateEmail()" type="submit" class="btn my-1"
+                        style="background-color: rgb(34, 189, 189);color: white;" id="emailSubmit">Subscribe</button>
                 </div>
             </div>
         </div>
@@ -265,7 +221,7 @@
     <hr class="solid liner">
     <div class="container-fluid cr" style="width: 82%;">
         <div class="cr-text">
-            © 2024 Ansar Utenov SE-2208.
+            © 2024 DNK Tour.
         </div>
         <div class="cr-icons d-none d-md-block">
             <ul>
@@ -297,6 +253,7 @@
     <script src="../public/scripts/customalert.js"></script>
     <script src="../public/scripts/updateTours.js"></script>
     <script src="../public/scripts/render.js"></script>
+    <script src="../public/scripts/pagination.js"></script>
 </body>
 
 </html>

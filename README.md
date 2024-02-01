@@ -1,28 +1,43 @@
-# Project Name: DNK Tours
-### Project Description
-DNK Tour - Travel Agency Application – your one-stop solution for planning and booking personalized tours around the world.
+# DNK Tour
 
-### Getting Started
-Follow these steps to launch the application:
+Welcome to the DNK Tour - Travel Agency Application – your one-stop solution for planning and booking personalized tours around the world.
+## Requirements
+This project is compatible with Node.js version 20.10.0. Ensure that you have Node.js installed with a version matching or later than 20.10.0 before proceeding with the installation and execution of the project.
+## Project Structure
 
-1. **Install GORM:**
-   go get -u gorm.io/gorm
+- **Routes**: The `routes` folder contains the routers for different functionalities. Notable ones are:
+  - `travelRouter.js`: Manages routes related to tour searches, data retrieval, weather information, and logging.
 
-2. **Install PostgreSQL Driver for GORM:**
-  go get -u gorm.io/driver/postgres
-3. **Create PostgreSQL Database:**
-Make sure PostgreSQL is installed.
-Update database connection settings in initDB function.
-Create a PostgreSQL database.
+- **Public**: The `public` folder stores static assets such as CSS scripts and images.
 
-4. **Run the Application:**
-  go run main.go
+- **View**: The `view` folder contains HTML files for different pages of the application.
+- **Data Storage**:
+  - `data.json`: Stores data related to tours, countries, cities, hotels, and prices.
+  - `logs.json`: Maintains a log of historical search queries.
+  - `users.json`: Stores users data, such as username, email, password.
+  - `package-lock.json`: Captures dependency versions to ensure consistent installations.
+  
 
-5. **Access the Application:**
-The server will be running at http://127.0.0.1:8080.
+- **Server**:
+ - `server.js`: Main server file that handles routing, static files, and server initialization.
 
-6. **Visit the web-page:**
-The webpage will be running at http://127.0.0.1:5500.
 
-## Screenshot:
-https://ibb.co.com/8NP7M4Q
+## Installation
+### 1. Clone the Repository:
+```bash
+git clone https://github.com/raxaris/travel-agency.git
+```
+### 2. Navigate to the Project Directory:
+```bash
+cd travel-agency
+```
+### 3. Install Dependencies:
+```go
+go mod download
+```
+### 4. Run the Application:
+```go
+go run main.go
+```
+### 5. Open in Browser:
+Visit http://localhost:3000 to explore the Travel Agency Application.

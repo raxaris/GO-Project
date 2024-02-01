@@ -17,7 +17,7 @@ function updateTours() {
         departure: dateRange ? dateRange.split(" to ")[1] : undefined,
         adults: adults,
         children: children,
-        sort: sort === "Ascending" ? "asc" : (sort === "Descending" ? "dsc" : undefined)
+        sort: sort === "Ascending" ? "asc" : (sort === "Descending" ? "dsc" : undefined),
     };
 
     const queryParams = Object.entries(queryParamsObject)

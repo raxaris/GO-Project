@@ -187,9 +187,19 @@ input {
 
 .filter-box {
     margin-right: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     border-radius: 10px;
     padding: 10px 15px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 45px;
+}
+
+.filter-box-poppins {
+    margin-right: 10px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    padding: 11px 15px;
     background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     height: 45px;
@@ -201,7 +211,7 @@ input {
     overflow: hidden;
 }
 
-.filter-box.blue {
+.filter-box.blue, .filter-box-poppins.blue {
     font-weight: 500;
     width: 10%;
     background-color: rgb(34, 189, 189);
@@ -210,7 +220,7 @@ input {
     cursor: pointer;
 }
 
-.filter-box.blue:hover {
+.filter-box.blue:hover, .filter-box-poppins.blue {
     background-color: rgb(11, 160, 160);
 }
 
@@ -356,7 +366,7 @@ button:hover {
 }
 
 .people {
-    width: 10%;
+    width: 12%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -440,4 +450,11 @@ input[type=number]::-webkit-outer-spin-button {
     height: 100%;
     background-color: rgb(34, 189, 189);
     transition: width 0.5s ease;
+}
+
+/* pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 0px;
 }
