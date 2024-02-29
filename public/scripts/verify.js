@@ -1,20 +1,27 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const formElement = document.getElementById('formLogin');
+    const formElement = document.getElementById('formVerify');
     console.log(formElement);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const emailInput = document.getElementById('email');
+    const email = urlParams.get('email');
+
+    if (email) {
+        emailInput.value = email;
+    }
 
     formElement.addEventListener('submit', async (event) => {
         event.preventDefault();
 
-        let body = {};
+        console.log(email)
+        let body = {
+            email: email,
+            verify: formElement.elements.verify.value
+        };
+        
+        console.log(body)
 
-        for (const input of formElement.elements) {
-            if (input.type === 'text' || input.type === 'password') {
-                body[input.name] = input.value;
-            }
-        }
-
-        console.log(JSON.stringify(body));
-        fetch("/login", {
+        fetch("/login/verify", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -23,20 +30,15 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
-            if (data.status === 200 || data.status === "success") {
-                if (data.admin) {
-                    window.location.href = "/admin";
-                } else {
-                    window.location.href = "/travel";
-                }
-            } else if (data.status === 404){
-                window.location.href = `/login/verify?email=${data.email}`;
+            if (data.status === 200) {
+                window.location.href = "/login";
             } else {
                 alertMSG(data.message, "danger");
             }
         })
         .catch(error => {
             console.error("An error occurred while processing your request:", error);
+            alertMSG("An error occurred while processing your request", "danger");
         });
     });
 });

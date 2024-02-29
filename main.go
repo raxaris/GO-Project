@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -19,6 +20,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/time/rate"
+	"gopkg.in/gomail.v2"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -30,10 +32,12 @@ var secret = os.Getenv("SECRET_KEY")
 
 type User struct {
 	gorm.Model
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Role     string `json:"role"`
+	Username         string `json:"username"`
+	Email            string `json:"email"`
+	Password         string `json:"password"`
+	Role             string `json:"role"`
+	VerificationCode string `json:"verification_code"`
+	IsVerified       bool   `json:"is_verified"`
 }
 
 type Country struct {
@@ -157,9 +161,19 @@ func registration(w http.ResponseWriter, r *http.Request) {
 	newUser.Password = string(hashedPassword)
 	newUser.Role = "user"
 
+	verificationCode := generateRandomCode()
+	newUser.VerificationCode = verificationCode
+	newUser.IsVerified = false
+
 	err = createUser(&newUser)
 	if err != nil {
 		responseError(w, http.StatusInternalServerError, "Error creating user")
+		return
+	}
+
+	err = sendVerificationCode(newUser.Email, verificationCode)
+	if err != nil {
+		responseError(w, http.StatusInternalServerError, "Error sending verification code")
 		return
 	}
 
@@ -180,6 +194,31 @@ func isEmailTaken(email string) bool {
 	var user User
 	result := db.Where("email = ?", email).First(&user)
 	return !errors.Is(result.Error, gorm.ErrRecordNotFound)
+}
+
+func generateRandomCode() string {
+	source := rand.NewSource(time.Now().UnixNano())
+	rand := rand.New(source)
+	code := rand.Intn(1000000)
+	return fmt.Sprintf("%06d", code)
+}
+
+func sendVerificationCode(email, code string) error {
+	m := gomail.NewMessage()
+	m.SetHeader("From", "waxansar99@gmail.com")
+	m.SetHeader("To", email)
+	m.SetHeader("Subject", "Verification Code")
+	m.SetBody("text/plain", "Your verification code: "+code)
+
+	d := gomail.NewDialer("smtp.gmail.com", 587, "waxansar99@gmail.com", "nhmj faiz kysy owks")
+
+	if err := d.DialAndSend(m); err != nil {
+		log.Println("Error when sending email:", err)
+		return err
+	}
+
+	log.Println("Verification code is sucessfully sent to", email)
+	return nil
 }
 
 // read
@@ -306,7 +345,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&loginData)
 	if err != nil {
-		http.Error(w, "Invalid JSON format", http.StatusBadRequest)
+		responseError(w, http.StatusBadRequest, "Invalid JSON format")
 		return
 	}
 
@@ -324,38 +363,45 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 		isAdmin := checkUserRoleIsAdmin(login)
 		if comparePasswords(user.Password, password) {
-			token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-				"username": user.Username,
-				"role":     user.Role,
-				"exp":      time.Now().Add(time.Hour * 24).Unix(),
-			})
+			if user.IsVerified {
+				token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+					"username": user.Username,
+					"role":     user.Role,
+					"exp":      time.Now().Add(time.Hour * 24).Unix(),
+				})
 
-			tokenString, err := token.SignedString([]byte(secret))
-			if err != nil {
-				responseError(w, http.StatusInternalServerError, "Failed to generate token")
-				return
+				tokenString, err := token.SignedString([]byte(secret))
+				if err != nil {
+					responseError(w, http.StatusInternalServerError, "Failed to generate token")
+					return
+				}
+
+				http.SetCookie(w, &http.Cookie{
+					Name:     "jwt",
+					Value:    tokenString,
+					Expires:  time.Now().Add(time.Hour * 24),
+					HttpOnly: true,
+				})
+
+				res := map[string]interface{}{
+					"status": 200,
+					"admin":  isAdmin,
+				}
+
+				logger.WithFields(logrus.Fields{
+					"module":   "main",
+					"function": "login",
+				}).Info("User successfully logged in")
+
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(res)
+			} else {
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(map[string]interface{}{
+					"status": 404,
+					"email":  user.Email,
+				})
 			}
-
-			http.SetCookie(w, &http.Cookie{
-				Name:     "jwt",
-				Value:    tokenString,
-				Expires:  time.Now().Add(time.Hour * 24),
-				HttpOnly: true,
-			})
-
-			res := map[string]interface{}{
-				"status": 200,
-				"admin":  isAdmin,
-			}
-
-			logger.WithFields(logrus.Fields{
-				"module":   "main",
-				"function": "login",
-			}).Info("User successfully logged in")
-
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(res)
-
 		} else {
 			responseError(w, http.StatusUnauthorized, "Incorrect password")
 		}
@@ -379,6 +425,51 @@ func checkUserRoleIsAdmin(username string) bool {
 	return user.Role == "admin"
 }
 
+// verify
+func verify(w http.ResponseWriter, r *http.Request) {
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "verify",
+	}).Info("Verify request")
+
+	var verificationData struct {
+		Email string `json:"email"`
+		Code  string `json:"verify"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&verificationData)
+	if err != nil {
+		responseError(w, http.StatusBadRequest, "Invalid JSON format")
+		return
+	}
+
+	email := verificationData.Email
+	code := verificationData.Code
+	fmt.Print(email, code)
+
+	var user User
+	result := db.Where("email = ?", email).First(&user)
+
+	if result.Error != nil {
+		responseError(w, http.StatusNotFound, "User not found")
+		return
+	}
+
+	if code != user.VerificationCode {
+		responseError(w, http.StatusBadRequest, "Invalid verification code")
+		return
+	}
+
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "verify",
+	}).Info("User successfully verified")
+	user.IsVerified = true
+	db.Save(&user)
+	responseSuccess(w, "User sucessfully verified", nil)
+}
+
+// logout
 func logout(w http.ResponseWriter, r *http.Request) {
 	cookie := http.Cookie{
 		Name:     "jwt",
@@ -743,6 +834,14 @@ func serveToursPage(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, filePath)
 }
 
+func serveVerifyPage(w http.ResponseWriter, r *http.Request) {
+	logger.WithFields(logrus.Fields{
+		"module": "main",
+	}).Info("User visits verify page")
+	filePath := filepath.Join("view", "verify.html")
+	http.ServeFile(w, r, filePath)
+}
+
 // JSON Response
 func respondWithJSON(w http.ResponseWriter, statusCode int, message string, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
@@ -778,18 +877,18 @@ func roleMiddleware(next http.Handler) http.Handler {
 
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok || !token.Valid {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			responseError(w, http.StatusUnauthorized, "Unauthorized")
 			return
 		}
 
 		role, ok := claims["role"].(string)
 		if !ok {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			responseError(w, http.StatusUnauthorized, "Unauthorized")
 			return
 		}
 
 		if role != "admin" {
-			http.Error(w, "Insufficient permissions", http.StatusForbidden)
+			responseError(w, http.StatusForbidden, "Insufficient permissions")
 			return
 		}
 
@@ -819,6 +918,8 @@ func main() {
 	//login
 	r.HandleFunc("/login", serveLoginPage).Methods("GET")
 	r.HandleFunc("/login", login).Methods("POST")
+	r.HandleFunc("/login/verify", serveVerifyPage).Methods("GET")
+	r.HandleFunc("/login/verify", verify).Methods("POST")
 	//logout
 	r.HandleFunc("/logout", logout).Methods("GET")
 	//homepage
