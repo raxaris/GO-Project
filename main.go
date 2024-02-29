@@ -100,7 +100,7 @@ func createUser(user *User) error {
 
 func registration(w http.ResponseWriter, r *http.Request) {
 	if !limiter.Allow() {
-		http.Error(w, "Rate limit exceeded", http.StatusTooManyRequests)
+		responseError(w, http.StatusTooManyRequests, "Rate limit exceeded")
 		return
 	}
 
@@ -277,8 +277,7 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 // login
 func login(w http.ResponseWriter, r *http.Request) {
 	if !limiter.Allow() {
-
-		http.Error(w, "Rate limit exceeded", http.StatusTooManyRequests)
+		responseError(w, http.StatusTooManyRequests, "Rate limit exceeded")
 		return
 	}
 
@@ -303,23 +302,35 @@ func login(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Login request: Login: %s, Password: %s\n", login, password)
 
 	if login != "" && password != "" {
-		isAdmin := checkUserRoleIsAdmin(login)
-
-		res := map[string]interface{}{
-			"status": 200,
-			"admin":  isAdmin,
+		var user User
+		result := db.Where("username = ?", login).First(&user)
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			responseError(w, http.StatusInternalServerError, fmt.Sprintf("User %s not found", login))
+			return
 		}
 
-		logger.WithFields(logrus.Fields{
-			"module":   "main",
-			"function": "login",
-		}).Info("User sucessfully logged in")
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(res)
-	} else {
-		http.Error(w, "Undefined or null login or password", http.StatusUnauthorized)
-	}
+		isAdmin := checkUserRoleIsAdmin(login)
 
+		if user.Password == password {
+			res := map[string]interface{}{
+				"status": 200,
+				"admin":  isAdmin,
+			}
+
+			logger.WithFields(logrus.Fields{
+				"module":   "main",
+				"function": "login",
+			}).Info("User successfully logged in")
+
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(res)
+
+		} else {
+			responseError(w, http.StatusUnauthorized, "Incorrect password")
+		}
+	} else {
+		responseError(w, http.StatusUnauthorized, "Undefined or null login or password")
+	}
 }
 
 func checkUserRoleIsAdmin(username string) bool {
@@ -335,7 +346,7 @@ func checkUserRoleIsAdmin(username string) bool {
 // travel
 func searchHandler(w http.ResponseWriter, r *http.Request) {
 	if !limiter.Allow() {
-		http.Error(w, "Rate limit exceeded", http.StatusTooManyRequests)
+		responseError(w, http.StatusTooManyRequests, "Rate limit exceeded")
 		return
 	}
 
