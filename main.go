@@ -15,7 +15,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-resty/resty/v2"
 	"github.com/gorilla/mux"
-	"github.com/gorilla/sessions"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
@@ -27,7 +26,6 @@ import (
 var db *gorm.DB
 var logger *logrus.Logger
 var limiter = rate.NewLimiter(1, 3)
-var store *sessions.CookieStore
 var secret = os.Getenv("SECRET_KEY")
 
 type User struct {
@@ -103,9 +101,6 @@ func initLogger() {
 }
 
 // session store
-func initSessionStore() {
-	store = sessions.NewCookieStore([]byte(secret))
-}
 
 // create
 func createUser(user *User) error {
@@ -188,21 +183,17 @@ func isEmailTaken(email string) bool {
 }
 
 // read
-func getUserByID(w http.ResponseWriter, r *http.Request) {
+func getUserByEmail(w http.ResponseWriter, r *http.Request) {
 	logger.WithFields(logrus.Fields{
 		"module":   "main",
-		"function": "getUserByID",
+		"function": "getUserByEmail",
 	}).Info("Admin requested user data")
 
-	userID := r.URL.Query().Get("id")
-	id, err := strconv.Atoi(userID)
-	if err != nil {
-		responseError(w, http.StatusBadRequest, "Invalid user ID")
-		return
-	}
+	vars := mux.Vars(r)
+	userEmail := vars["email"]
 
 	var user User
-	err = db.First(&user, id).Error
+	err := db.Where("email = ?", userEmail).First(&user).Error
 	if err != nil {
 		responseError(w, http.StatusNotFound, "User not found")
 		return
@@ -210,7 +201,7 @@ func getUserByID(w http.ResponseWriter, r *http.Request) {
 
 	logger.WithFields(logrus.Fields{
 		"module":   "main",
-		"function": "getUserByID",
+		"function": "getUserByEmail",
 	}).Info("Data was succesfully sent")
 
 	responseSuccess(w, "success", user)
@@ -280,8 +271,10 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 		"function": "deleteUser",
 	}).Info("Admin deletes user's data")
 
-	email := r.URL.Query().Get("email")
-	err := db.Where("email = ?", email).Delete(&User{}).Error
+	vars := mux.Vars(r)
+	userEmail := vars["email"]
+
+	err := db.Where("email = ?", userEmail).Delete(&User{}).Error
 	if err != nil {
 		log.Fatal(err)
 		responseError(w, http.StatusInternalServerError, "Error deleting user")
@@ -291,7 +284,7 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 		"module":   "main",
 		"function": "deleteUser",
 	}).Info("User deleted successfully")
-	responseSuccess(w, "User deleted successfully", email)
+	responseSuccess(w, "User deleted successfully", userEmail)
 }
 
 // login
@@ -343,17 +336,12 @@ func login(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			session, err := store.Get(r, fmt.Sprint("session-%s", login))
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-			session.Values["token"] = tokenString
-			err = session.Save(r, w)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
+			http.SetCookie(w, &http.Cookie{
+				Name:     "jwt",
+				Value:    tokenString,
+				Expires:  time.Now().Add(time.Hour * 24),
+				HttpOnly: true,
+			})
 
 			res := map[string]interface{}{
 				"status": 200,
@@ -389,6 +377,19 @@ func checkUserRoleIsAdmin(username string) bool {
 	}
 
 	return user.Role == "admin"
+}
+
+func logout(w http.ResponseWriter, r *http.Request) {
+	cookie := http.Cookie{
+		Name:     "jwt",
+		Value:    "",
+		Expires:  time.Unix(0, 0),
+		HttpOnly: true,
+	}
+	http.SetCookie(w, &cookie)
+
+	w.Header().Set("Location", "/")
+	w.WriteHeader(http.StatusFound)
 }
 
 // travel
@@ -758,17 +759,37 @@ func responseSuccess(w http.ResponseWriter, message string, data interface{}) {
 }
 
 // middleware
-func isAdminMiddleware(next http.Handler) http.Handler {
+func roleMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		session, err := store.Get(r, "session-name")
+		cookie, err := r.Cookie("jwt")
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			responseError(w, http.StatusUnauthorized, "Unauthorized")
 			return
 		}
 
-		role, ok := session.Values["role"].(string)
-		if !ok || role != "admin" {
+		tokenString := cookie.Value
+		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			return []byte(secret), nil
+		})
+		if err != nil {
+			responseError(w, http.StatusUnauthorized, "Unauthorized")
+			return
+		}
+
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok || !token.Valid {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		role, ok := claims["role"].(string)
+		if !ok {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		if role != "admin" {
+			http.Error(w, "Insufficient permissions", http.StatusForbidden)
 			return
 		}
 
@@ -779,26 +800,27 @@ func isAdminMiddleware(next http.Handler) http.Handler {
 func main() {
 	initDB()
 	initLogger()
-	initSessionStore()
 
 	r := mux.NewRouter()
 	//create/register
 	r.HandleFunc("/registration", registration).Methods("POST")
 	r.HandleFunc("/registration", serveRegistrationPage).Methods("GET")
 
-	//admin
-	r.HandleFunc("/admin", serveAdminPage).Methods("GET")
 	//admin router
 	adminRouter := r.PathPrefix("/admin").Subrouter()
+	adminRouter.Use(roleMiddleware)
+	adminRouter.HandleFunc("", serveAdminPage).Methods("GET")
 	adminRouter.HandleFunc("/updateUser", updateUser).Methods("PUT")
-	adminRouter.HandleFunc("/deleteUser", deleteUser).Methods("DELETE")
-	adminRouter.HandleFunc("/getUserByID", getUserByID).Methods("GET")
+	adminRouter.HandleFunc("/deleteUser/{email}", deleteUser).Methods("DELETE")
+	adminRouter.HandleFunc("/getUser/{email}", getUserByEmail).Methods("GET")
 	adminRouter.HandleFunc("/getAllUsers", getAllUsers).Methods("GET")
+	adminRouter.HandleFunc("/addUser", registration).Methods("POST")
 
 	//login
 	r.HandleFunc("/login", serveLoginPage).Methods("GET")
 	r.HandleFunc("/login", login).Methods("POST")
-
+	//logout
+	r.HandleFunc("/logout", logout).Methods("GET")
 	//homepage
 	r.HandleFunc("/", serveHomePage).Methods("GET")
 	//travel
