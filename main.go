@@ -6,14 +6,19 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/go-resty/resty/v2"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
+	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/time/rate"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -22,6 +27,8 @@ import (
 var db *gorm.DB
 var logger *logrus.Logger
 var limiter = rate.NewLimiter(1, 3)
+var store *sessions.CookieStore
+var secret = os.Getenv("SECRET_KEY")
 
 type User struct {
 	gorm.Model
@@ -67,6 +74,7 @@ type WeatherData struct {
 	Condition   string  `json:"condition"`
 }
 
+// db
 func initDB() {
 	dsn := "host=localhost user=postgres password=123 dbname=registration sslmode=disable"
 	var err error
@@ -78,6 +86,7 @@ func initDB() {
 	db.AutoMigrate(&User{})
 }
 
+// logger
 func initLogger() {
 	logger = logrus.New()
 	logger.SetLevel(logrus.DebugLevel)
@@ -91,6 +100,11 @@ func initLogger() {
 	}, &logrus.JSONFormatter{})
 
 	logger.AddHook(fileHook)
+}
+
+// session store
+func initSessionStore() {
+	store = sessions.NewCookieStore([]byte(secret))
 }
 
 // create
@@ -108,7 +122,7 @@ func registration(w http.ResponseWriter, r *http.Request) {
 	logger.WithFields(logrus.Fields{
 		"module":   "main",
 		"function": "registration",
-	}).Info("User sent data")
+	}).Info("User sended data")
 
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&newUser)
@@ -140,6 +154,12 @@ func registration(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
+	if err != nil {
+		responseError(w, http.StatusInternalServerError, "Crypting Error")
+	}
+
+	newUser.Password = string(hashedPassword)
 	newUser.Role = "user"
 
 	err = createUser(&newUser)
@@ -299,7 +319,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	login := loginData.Login
 	password := loginData.Password
-	fmt.Printf("Login request: Login: %s, Password: %s\n", login, password)
+	fmt.Printf("Login request: Login: %s", login)
 
 	if login != "" && password != "" {
 		var user User
@@ -310,8 +330,31 @@ func login(w http.ResponseWriter, r *http.Request) {
 		}
 
 		isAdmin := checkUserRoleIsAdmin(login)
+		if comparePasswords(user.Password, password) {
+			token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+				"username": user.Username,
+				"role":     user.Role,
+				"exp":      time.Now().Add(time.Hour * 24).Unix(),
+			})
 
-		if user.Password == password {
+			tokenString, err := token.SignedString([]byte(secret))
+			if err != nil {
+				responseError(w, http.StatusInternalServerError, "Failed to generate token")
+				return
+			}
+
+			session, err := store.Get(r, fmt.Sprint("session-%s", login))
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			session.Values["token"] = tokenString
+			err = session.Save(r, w)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
 			res := map[string]interface{}{
 				"status": 200,
 				"admin":  isAdmin,
@@ -331,6 +374,11 @@ func login(w http.ResponseWriter, r *http.Request) {
 	} else {
 		responseError(w, http.StatusUnauthorized, "Undefined or null login or password")
 	}
+}
+
+func comparePasswords(hashedPassword, inputPassword string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(inputPassword))
+	return err == nil
 }
 
 func checkUserRoleIsAdmin(username string) bool {
@@ -709,9 +757,29 @@ func responseSuccess(w http.ResponseWriter, message string, data interface{}) {
 	respondWithJSON(w, http.StatusOK, message, data)
 }
 
+// middleware
+func isAdminMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		session, err := store.Get(r, "session-name")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		role, ok := session.Values["role"].(string)
+		if !ok || role != "admin" {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	initDB()
 	initLogger()
+	initSessionStore()
 
 	r := mux.NewRouter()
 	//create/register

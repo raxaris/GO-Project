@@ -220,3 +220,59 @@
 {"level":"info","module":"main","msg":"Admin visits admin page","time":"2024-02-29T14:34:45+06:00"}
 {"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-02-29T14:34:45+06:00"}
 {"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-02-29T14:34:45+06:00"}
+{"function":"registration","level":"info","module":"main","msg":"User sent data","time":"2024-02-29T14:53:47+06:00"}
+{"function":"registration","level":"info","module":"main","msg":"User successfully registered","time":"2024-02-29T14:53:47+06:00"}
+{"level":"info","module":"main","msg":"User visits login page","time":"2024-02-29T14:53:47+06:00"}
+{"function":"login","level":"info","module":"main","msg":"Login request","time":"2024-02-29T15:27:09+06:00"}
+{"function":"login","level":"info","module":"main","msg":"Login request","time":"2024-02-29T15:28:31+06:00"}
+{"function":"login","level":"info","module":"main","msg":"User successfully logged in","time":"2024-02-29T15:28:31+06:00"}
+{"level":"info","module":"main","msg":"User visits registration page","time":"2024-02-29T15:29:12+06:00"}
+{"level":"info","module":"main","msg":"Admin visits admin page","time":"2024-02-29T15:29:20+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-02-29T15:29:20+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-02-29T15:29:20+06:00"}
+{"function":"deleteUser","level":"info","module":"main","msg":"Admin deletes user's data","time":"2024-02-29T15:29:22+06:00"}
+{"function":"deleteUser","level":"info","module":"main","msg":"User deleted successfully","time":"2024-02-29T15:29:22+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-02-29T15:29:22+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-02-29T15:29:22+06:00"}
+{"function":"deleteUser","level":"info","module":"main","msg":"Admin deletes user's data","time":"2024-02-29T15:29:24+06:00"}
+{"function":"deleteUser","level":"info","module":"main","msg":"User deleted successfully","time":"2024-02-29T15:29:24+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-02-29T15:29:24+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-02-29T15:29:24+06:00"}
+{"level":"info","module":"main","msg":"Admin visits admin page","time":"2024-02-29T15:29:34+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-02-29T15:29:34+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-02-29T15:29:34+06:00"}
+{"function":"deleteUser","level":"info","module":"main","msg":"Admin deletes user's data","time":"2024-02-29T15:29:35+06:00"}
+{"function":"deleteUser","level":"info","module":"main","msg":"User deleted successfully","time":"2024-02-29T15:29:35+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-02-29T15:29:35+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-02-29T15:29:35+06:00"}
+{"function":"deleteUser","level":"info","module":"main","msg":"Admin deletes user's data","time":"2024-02-29T15:29:37+06:00"}
+{"function":"deleteUser","level":"info","module":"main","msg":"User deleted successfully","time":"2024-02-29T15:29:37+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-02-29T15:29:37+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-02-29T15:29:37+06:00"}
+{"function":"deleteUser","level":"info","module":"main","msg":"Admin deletes user's data","time":"2024-02-29T15:29:38+06:00"}
+{"function":"deleteUser","level":"info","module":"main","msg":"User deleted successfully","time":"2024-02-29T15:29:38+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-02-29T15:29:38+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-02-29T15:29:38+06:00"}
+{"function":"deleteUser","level":"info","module":"main","msg":"Admin deletes user's data","time":"2024-02-29T15:29:39+06:00"}
+{"function":"deleteUser","level":"info","module":"main","msg":"User deleted successfully","time":"2024-02-29T15:29:39+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-02-29T15:29:39+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-02-29T15:29:39+06:00"}
+{"function":"deleteUser","level":"info","module":"main","msg":"Admin deletes user's data","time":"2024-02-29T15:29:39+06:00"}
+{"function":"deleteUser","level":"info","module":"main","msg":"User deleted successfully","time":"2024-02-29T15:29:39+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-02-29T15:29:39+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-02-29T15:29:39+06:00"}
+{"level":"info","module":"main","msg":"Admin visits admin page","time":"2024-02-29T15:30:53+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-02-29T15:30:53+06:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-02-29T15:30:53+06:00"}
+{"function":"registration","level":"info","module":"main","msg":"User sended data","time":"2024-02-29T15:31:18+06:00"}
+{"function":"registration","level":"info","module":"main","msg":"User sended data","time":"2024-02-29T15:31:27+06:00"}
+{"function":"registration","level":"info","module":"main","msg":"User successfully registered","time":"2024-02-29T15:31:28+06:00"}
+{"level":"info","module":"main","msg":"User visits login page","time":"2024-02-29T15:31:28+06:00"}
+{"function":"login","level":"info","module":"main","msg":"Login request","time":"2024-02-29T15:31:34+06:00"}
+{"function":"login","level":"info","module":"main","msg":"User successfully logged in","time":"2024-02-29T15:31:34+06:00"}
+{"level":"info","module":"main","msg":"User visits registration page","time":"2024-02-29T15:33:01+06:00"}
+{"function":"registration","level":"info","module":"main","msg":"User sended data","time":"2024-02-29T15:33:15+06:00"}
+{"function":"registration","level":"info","module":"main","msg":"User successfully registered","time":"2024-02-29T15:33:15+06:00"}
+{"level":"info","module":"main","msg":"User visits login page","time":"2024-02-29T15:33:15+06:00"}
+{"function":"login","level":"info","module":"main","msg":"Login request","time":"2024-02-29T15:33:21+06:00"}
+{"function":"login","level":"info","module":"main","msg":"User successfully logged in","time":"2024-02-29T15:33:21+06:00"}
