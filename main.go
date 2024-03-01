@@ -85,6 +85,10 @@ func initDB() {
 		log.Fatal(err)
 	}
 
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "initDB",
+	}).Info("Database sucessfully connected")
 	db.AutoMigrate(&User{})
 }
 
@@ -506,7 +510,7 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 	sort := queryParams.Get("sort")
 	page := queryParams.Get("page")
 
-	limit := 4
+	limit := 10
 	offset := 0
 
 	var adults int
@@ -897,8 +901,8 @@ func roleMiddleware(next http.Handler) http.Handler {
 }
 
 func main() {
-	initDB()
 	initLogger()
+	initDB()
 
 	r := mux.NewRouter()
 	//create/register
