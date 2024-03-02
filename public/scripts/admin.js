@@ -122,6 +122,33 @@ async function search() {
     }
 }
 
+async function sendNewsletter() {
+    const message = document.getElementById('newsletterMessage').value;
+
+    try {
+        const response = await fetch('/admin/newsletter', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: message,
+            })
+        });
+        
+        if (!response.ok) {
+            const jsonReponse = await response.json()
+            throw new Error(jsonReponse.message);
+        }
+        console.log(response)
+        const myModal = document.getElementById('newsletterModal');
+        $(myModal).modal('hide');
+        showAll();
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
+}
+
 async function createUser() {
     const newUsername = document.getElementById('newUsername').value;
     const newEmail = document.getElementById('newEmail').value;

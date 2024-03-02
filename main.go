@@ -225,6 +225,61 @@ func sendVerificationCode(email, code string) error {
 	return nil
 }
 
+func sendEmail(w http.ResponseWriter, r *http.Request) {
+	logger.WithFields(logrus.Fields{
+		"module":   "main",
+		"function": "sendEmail",
+	}).Info("Request from admin")
+
+	var messageData struct {
+		Message string `json:"message"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&messageData)
+	if err != nil {
+		responseError(w, http.StatusBadRequest, "Invalid JSON format")
+		return
+	}
+
+	message := messageData.Message
+	fmt.Print(message)
+
+	err = sendToAllUsers(message)
+	if err != nil {
+		responseError(w, http.StatusInternalServerError, "Error sending emails")
+		return
+	}
+
+	responseSuccess(w, "Emails sucessfully sended", nil)
+}
+
+func sendToAllUsers(message string) error {
+	var users []User
+	if err := db.Find(&users).Error; err != nil {
+		logrus.WithError(err).Error("Error when querying users")
+		return err
+	}
+
+	for _, user := range users {
+		m := gomail.NewMessage()
+		m.SetHeader("From", "waxansar99@gmail.com")
+		m.SetHeader("To", user.Email)
+		m.SetHeader("Subject", "Newsletter")
+		m.SetBody("text/plain", message)
+
+		d := gomail.NewDialer("smtp.gmail.com", 587, "waxansar99@gmail.com", "nhmj faiz kysy owks")
+
+		if err := d.DialAndSend(m); err != nil {
+			logrus.WithError(err).WithField("username", user.Username).Error("Error when sending email to user")
+			continue
+		}
+
+	}
+
+	logrus.Info("Message is successfully sent to all users")
+	return nil
+}
+
 // read
 func getUserByEmail(w http.ResponseWriter, r *http.Request) {
 	logger.WithFields(logrus.Fields{
@@ -918,6 +973,7 @@ func main() {
 	adminRouter.HandleFunc("/getUser/{email}", getUserByEmail).Methods("GET")
 	adminRouter.HandleFunc("/getAllUsers", getAllUsers).Methods("GET")
 	adminRouter.HandleFunc("/addUser", registration).Methods("POST")
+	adminRouter.HandleFunc("/newsletter", sendEmail).Methods("POST")
 
 	//login
 	r.HandleFunc("/login", serveLoginPage).Methods("GET")
