@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -104,6 +105,11 @@ func TestGetTour(t *testing.T) {
 }
 
 func TestGetTourEndToEnd(t *testing.T) {
+	service, err := selenium.NewChromeDriverService("./chromedriver", 4444)
+	if err != nil {
+		log.Fatal("Error:", err)
+	}
+	defer service.Stop()
 
 	caps := selenium.Capabilities{"browserName": "chrome"}
 	chromeCaps := chrome.Capabilities{
@@ -135,7 +141,7 @@ func TestGetTourEndToEnd(t *testing.T) {
 	}
 	searchInput.SendKeys("USA")
 
-	searchButton, err := wd.FindElement(selenium.ByClassName, "filter-box-poppins blue")
+	searchButton, err := wd.FindElement(selenium.ByClassName, "updatetours")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -143,7 +149,7 @@ func TestGetTourEndToEnd(t *testing.T) {
 
 	time.Sleep(5 * time.Second)
 
-	searchResults, err := wd.FindElements(selenium.ByClassName, "row p-0")
+	searchResults, err := wd.FindElements(selenium.ByClassName, "row")
 	if err != nil {
 		t.Fatal(err)
 	}
