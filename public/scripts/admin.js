@@ -143,7 +143,6 @@ async function sendNewsletter() {
         console.log(response)
         const myModal = document.getElementById('newsletterModal');
         $(myModal).modal('hide');
-        showAll();
     } catch (error) {
         console.error('Fetch error:', error);
     }
@@ -177,6 +176,7 @@ async function createUser() {
 
         const myModal = document.getElementById('createModal');
         $(myModal).modal('hide');
+        clearAll();
         showAll();
     } catch (error) {
         console.error('Fetch error:', error);

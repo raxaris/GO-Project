@@ -5,6 +5,7 @@ go 1.21.5
 require github.com/lib/pq v1.10.9
 
 require (
+	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/go-resty/resty/v2 v2.11.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
@@ -141,6 +142,7 @@ require (
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/snowflakedb/gosnowflake v1.7.1 // indirect
+	github.com/tebeka/selenium v0.9.9
 	github.com/xanzy/go-gitlab v0.95.2 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.1.2 // indirect
