@@ -78,7 +78,7 @@ type WeatherData struct {
 
 // db
 func initDB() {
-	dsn := "host=localhost user=postgres password=123 dbname=registration sslmode=disable"
+	dsn := "postgres://raxar:FuytO62iOGxMjOocpKZDjzl79uOIHa0Y@dpg-cnhitned3nmc739ep450-a.oregon-postgres.render.com/reg_fg53?sslmode=require"
 	var err error
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {

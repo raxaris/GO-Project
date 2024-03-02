@@ -808,3 +808,8 @@
 {"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-03-02T16:51:23+05:00"}
 {"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-03-02T16:51:25+05:00"}
 {"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-03-02T16:51:26+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-03-02T19:00:52+05:00"}
+{"level":"info","module":"main","msg":"User visits home page","time":"2024-03-02T19:01:07+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-03-02T19:01:09+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-03-02T19:01:09+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-03-02T19:01:17+05:00"}
