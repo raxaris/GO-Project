@@ -5,11 +5,11 @@ Welcome to the DNK Tour - Travel Agency Application – your one-stop solution f
 ## Installation
 ### 1. Clone the Repository:
 ```bash
-git clone https://github.com/raxaris/travel-agency.git
+git clone https://github.com/raxaris/GO-Project.git
 ```
 ### 2. Navigate to the Project Directory:
 ```bash
-cd travel-agency
+cd go-project
 ```
 ### 3. Install Dependencies:
 ```go
