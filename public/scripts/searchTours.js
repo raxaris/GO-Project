@@ -24,7 +24,7 @@ function searchTours() {
         .join('&');
 
    
-        const url = `http://localhost:8080/travel/tours?${queryParams}`;
+        const url = `https://go-project-nhcw.onrender.com/travel/tours?${queryParams}`;
         console.log(url);
         window.location.href = url;
 }

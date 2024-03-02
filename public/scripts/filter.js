@@ -200,5 +200,5 @@ function updateAvailableHotels(cityName) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    fetchDataAndProcess('http://localhost:8080/travel/data');
+    fetchDataAndProcess('https://go-project-nhcw.onrender.com/travel/data');
 });

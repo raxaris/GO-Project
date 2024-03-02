@@ -116,9 +116,9 @@ async function renderPage(page) {
         const queryString = window.location.search;
         let serverURL;
         if(queryString){
-            serverURL = `http://localhost:8080/travel/search${queryString}&page=${page}`;
+            serverURL = `https://go-project-nhcw.onrender.com/travel/search${queryString}&page=${page}`;
         } else {
-            serverURL = `http://localhost:8080/travel/search?page=${page}`
+            serverURL = `https://go-project-nhcw.onrender.com/travel/search?page=${page}`
         }
         console.log(serverURL);
         const data = await getDataFromServer(serverURL);
