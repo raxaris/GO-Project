@@ -57,9 +57,11 @@ type Chat struct {
 type Message struct {
 	gorm.Model
 	UserID    uint      `gorm:"index" json:"user_id"`
+	Role      string    `json:"role"`
 	ChatID    string    `gorm:"index" json:"chat_id"`
 	Content   string    `json:"content"`
-	Timestamp time.Time `bson:"time"`
+	Timestamp time.Time `json:"time"`
+	Active    bool      `json:"active"`
 }
 
 type Country struct {
@@ -944,30 +946,8 @@ func serveChatPage(w http.ResponseWriter, r *http.Request) {
 	}).Info("User visits chat  page")
 	filePath := filepath.Join("view", "chat.html")
 
-	id, err := ExtractUserID(r)
+	_, _, err := checkAccess(w, r)
 	if err != nil {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
-	parts := strings.Split(r.URL.Path, "/")
-	chatID := parts[len(parts)-1]
-
-	var chat Chat
-	err = db.Where("id = ?", chatID).First(&chat).Error
-	if err != nil {
-		http.Error(w, "Chat not found", http.StatusNotFound)
-		return
-	}
-
-	var user User
-	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
-		http.Error(w, "User not found", http.StatusNotFound)
-		return
-	}
-
-	if user.ID != chat.ClientID && user.ID != chat.AdminID {
-		http.Error(w, "Access denied", http.StatusForbidden)
 		return
 	}
 
@@ -1247,6 +1227,16 @@ func handleUser(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 
+		message := Message{
+			UserID:    uint(userID),
+			Role:      "user",
+			ChatID:    chatID,
+			Content:   string(msg),
+			Timestamp: time.Now(),
+			Active:    true,
+		}
+		db.Create(&message)
+
 		mu.Lock()
 		adminConn := adminConns[float64(chat.AdminID)]
 		mu.Unlock()
@@ -1307,6 +1297,16 @@ func handleAdmin(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 
+		message := Message{
+			UserID:    uint(adminID),
+			Role:      "admin",
+			ChatID:    chatID,
+			Content:   string(msg),
+			Timestamp: time.Now(),
+			Active:    true,
+		}
+		db.Create(&message)
+
 		mu.Lock()
 		userConn := userConns[float64(chat.ClientID)]
 		mu.Unlock()
@@ -1364,6 +1364,68 @@ func getRole(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"role": role})
 }
 
+func getID(w http.ResponseWriter, r *http.Request) {
+	id, err := ExtractUserID(r)
+	if err != nil {
+		http.Error(w, "Error extracting role", http.StatusInternalServerError)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]float64{"id": id})
+}
+
+func getActiveMSG(w http.ResponseWriter, r *http.Request) {
+	_, chat, err := checkAccess(w, r)
+
+	if err != nil {
+		http.Error(w, "Not enough rights", http.StatusUnauthorized)
+		return
+	}
+
+	var messages []Message
+	db.Where("chat_id = ? AND active = ?", chat.ID, true).Find(&messages)
+
+	// Сериализуем сообщения в JSON и отправляем обратно клиенту
+	jsonData, err := json.Marshal(messages)
+	if err != nil {
+		http.Error(w, "Failed to marshal messages to JSON", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonData)
+}
+
+func checkAccess(w http.ResponseWriter, r *http.Request) (*User, *Chat, error) {
+	id, err := ExtractUserID(r)
+	if err != nil {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return nil, nil, err
+	}
+
+	parts := strings.Split(r.URL.Path, "/")
+	chatID := parts[len(parts)-1]
+
+	var chat Chat
+	if err := db.Where("id = ?", chatID).First(&chat).Error; err != nil {
+		http.Error(w, "Chat not found", http.StatusNotFound)
+		return nil, nil, err
+	}
+
+	var user User
+	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return nil, nil, err
+	}
+
+	if user.ID != chat.ClientID && user.ID != chat.AdminID {
+		http.Error(w, "Access denied", http.StatusForbidden)
+		return nil, nil, errors.New("access denied")
+	}
+
+	return &user, &chat, nil
+}
+
 func main() {
 	initLogger()
 	initDB()
@@ -1405,6 +1467,8 @@ func main() {
 	// WebSocket
 	r.HandleFunc("/chat", chatHandler).Methods("GET")
 	r.HandleFunc("/getrole", getRole).Methods("GET")
+	r.HandleFunc("/getid", getID).Methods("GET")
+	r.HandleFunc("/getmsg/{chat_id}", getActiveMSG).Methods("GET")
 	r.HandleFunc("/chat/{chat_id}", serveChatPage).Methods("GET")
 	r.HandleFunc("/ws/user/{chat_id}", handleUser)
 	r.HandleFunc("/ws/admin/{chat_id}", handleAdmin)

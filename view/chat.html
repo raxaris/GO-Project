@@ -17,20 +17,19 @@
         async function initializeChat() {
             const role = await getUserRole();
             console.log(role);
-
+            const id = await getUserID();
             const isAdmin = role === "admin";
-            console.log(isAdmin);
+            const companion = isAdmin ? "user" : "admin"
             const endpoint = isAdmin ? "admin" : "user";
             const chatID = window.location.pathname.split("/").pop();
             const socket = new WebSocket(socketURL + endpoint + "/" + chatID);
-
             socket.onopen = function(event) {
                 console.log("WebSocket connection established.");
             };
 
             socket.onmessage = function(event) {
                 const message = event.data;
-                displayMessage(message);
+                displayMessage(message, companion);
             };
 
             socket.onerror = function(error) {
@@ -41,6 +40,16 @@
                 console.log("WebSocket connection closed.");
             };
 
+            // Получаем сообщения при инициализации чата
+            const messagesResponse = await fetch(`http://localhost:8080/getmsg/${chatID}`);
+            if (!messagesResponse.ok) {
+                console.error("Failed to fetch messages");
+                return;
+            }
+            const messages = await messagesResponse.json();
+            
+            messages.forEach(message => displayMessage(message.content, message.role));
+
             function sendMessage() {
                 const messageInput = document.getElementById("message-input");
                 const message = messageInput.value.trim();
@@ -49,14 +58,26 @@
                     socket.send(message);
                     messageInput.value = "";
                 }
+                
+                displayMessage(message, role);
             }
 
-            function displayMessage(message) {
+            function displayMessage(message , role) {
                 const chatBox = document.getElementById("chat-box");
+                
+                // Создаем элементы для имени пользователя и текста сообщения
+                const userElement = document.createElement("div");
                 const messageElement = document.createElement("div");
+
+                // Устанавливаем текст для элементов
+                userElement.textContent = role;
                 messageElement.textContent = message;
+
+                // Добавляем элементы в чат-бокс, сначала имя пользователя, затем сообщение
+                chatBox.appendChild(userElement);
                 chatBox.appendChild(messageElement);
             }
+
 
             window.sendMessage = sendMessage;
         }
@@ -81,6 +102,30 @@
                 }
             } catch (error) {
                 console.error('Error fetching role:', error);
+                return null;
+            }
+        }
+
+        async function getUserID() {
+            try {
+                const response = await fetch('http://localhost:8080/getid', {
+                    method: 'GET',
+                    credentials: 'include', // Include cookies in the request
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.id) {
+                    return data.id;
+                } else {
+                    throw new Error('ID not found in response');
+                }
+            } catch (error) {
+                console.error('Error fetching id:', error);
                 return null;
             }
         }
