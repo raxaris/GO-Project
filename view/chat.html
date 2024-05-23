@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+</head>
+<body>
+    <div id="chat-box"></div>
+    <input type="text" id="message-input" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        const jwtCookieName = "jwt";
+        const socketURL = "ws://localhost:8080/ws/";
+
+        async function initializeChat() {
+            const role = await getUserRole();
+            console.log(role);
+
+            const isAdmin = role === "admin";
+            console.log(isAdmin);
+            const endpoint = isAdmin ? "admin" : "user";
+            const chatID = window.location.pathname.split("/").pop();
+            const socket = new WebSocket(socketURL + endpoint + "/" + chatID);
+
+            socket.onopen = function(event) {
+                console.log("WebSocket connection established.");
+            };
+
+            socket.onmessage = function(event) {
+                const message = event.data;
+                displayMessage(message);
+            };
+
+            socket.onerror = function(error) {
+                console.error("WebSocket error:", error);
+            };
+
+            socket.onclose = function(event) {
+                console.log("WebSocket connection closed.");
+            };
+
+            function sendMessage() {
+                const messageInput = document.getElementById("message-input");
+                const message = messageInput.value.trim();
+
+                if (message !== "") {
+                    socket.send(message);
+                    messageInput.value = "";
+                }
+            }
+
+            function displayMessage(message) {
+                const chatBox = document.getElementById("chat-box");
+                const messageElement = document.createElement("div");
+                messageElement.textContent = message;
+                chatBox.appendChild(messageElement);
+            }
+
+            window.sendMessage = sendMessage;
+        }
+
+        async function getUserRole() {
+            try {
+                const response = await fetch('http://localhost:8080/getrole', {
+                    method: 'GET',
+                    credentials: 'include', // Include cookies in the request
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.role) {
+                    return data.role;
+                } else {
+                    throw new Error('Role not found in response');
+                }
+            } catch (error) {
+                console.error('Error fetching role:', error);
+                return null;
+            }
+        }
+        initializeChat();
+    </script>
+</body>
+</html>

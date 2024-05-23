@@ -215,3 +215,56 @@ async function getUserByEmail(email) {
         throw new Error(`Unable to fetch user with email ${email}`);
     }
 }
+
+async function loadAdminPanelChats() {
+    try {
+        const response = await fetch('/admin/chats');
+        if (!response.ok) {
+            throw new Error('Failed to fetch chats');
+        }
+        const chats = await response.json();
+
+        const chatModal = document.getElementById('chatModal');
+        const modalBody = chatModal.querySelector('.modal-body');
+
+        modalBody.innerHTML = "";
+
+        if (chats.length === 0) {
+            modalBody.textContent = "No available chats.";
+        } else {
+            chats.forEach(chat => {
+                const chatElement = document.createElement('div');
+                chatElement.className = "chat-item row mb-2 align-items-center";
+                chatElement.innerHTML = `
+                    <div class = "col-10">Chat ID: ${chat.id}</div>
+                    <div class = "col-2 text-end">
+                    <button class="btn btn-primary px-4" onclick="joinChat('${chat.id}')">Join</button>
+                    </div>
+                `;
+                modalBody.appendChild(chatElement);
+            });
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+        const chatModal = document.getElementById('chatModal');
+        const modalBody = chatModal.querySelector('.modal-body');
+        modalBody.textContent = "Failed to load chats.";
+    }
+}
+
+function joinChat(chatId) {
+    console.log(`Joining chat ${chatId}`);
+    window.location.href = `admin/chats/${chatId}`;
+}
+
+let chatInterval;
+
+// Обработчики событий открытия и закрытия модального окна
+document.getElementById('chatModal').addEventListener('show.bs.modal', function () {
+    loadAdminPanelChats(); // Загрузка чатов сразу при открытии модального окна
+    chatInterval = setInterval(loadAdminPanelChats, 5000); // Запуск интервала обновления каждые 5 секунд
+});
+
+document.getElementById('chatModal').addEventListener('hide.bs.modal', function () {
+    clearInterval(chatInterval); // Остановка интервала при закрытии модального окна
+});

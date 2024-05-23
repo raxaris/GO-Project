@@ -11,11 +11,15 @@ import (
 	"path/filepath"
 	"regexp"
 	"strconv"
+	"strings"
+	"sync"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-resty/resty/v2"
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/websocket"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
@@ -29,6 +33,7 @@ var db *gorm.DB
 var logger *logrus.Logger
 var limiter = rate.NewLimiter(1, 3)
 var secret = os.Getenv("SECRET_KEY")
+var emailPassword = os.Getenv("EMAIL_PASSWORD")
 
 type User struct {
 	gorm.Model
@@ -38,6 +43,23 @@ type User struct {
 	Role             string `json:"role"`
 	VerificationCode string `json:"verification_code"`
 	IsVerified       bool   `json:"is_verified"`
+	ChatID           string `json:"chat_id"`
+}
+
+type Chat struct {
+	gorm.Model
+	ID       string `json:"id"`
+	ClientID uint   `json:"client_id"`
+	AdminID  uint   `json:"admin_id"`
+	Closed   bool   `json:"closed"`
+}
+
+type Message struct {
+	gorm.Model
+	UserID    uint      `gorm:"index" json:"user_id"`
+	ChatID    string    `gorm:"index" json:"chat_id"`
+	Content   string    `json:"content"`
+	Timestamp time.Time `bson:"time"`
 }
 
 type Country struct {
@@ -89,7 +111,7 @@ func initDB() {
 		"module":   "main",
 		"function": "initDB",
 	}).Info("Database sucessfully connected")
-	db.AutoMigrate(&User{})
+	db.AutoMigrate(&User{}, &Chat{}, &Message{})
 }
 
 // logger
@@ -254,29 +276,59 @@ func sendEmail(w http.ResponseWriter, r *http.Request) {
 }
 
 func sendToAllUsers(message string) error {
+	startTime := time.Now()
 	var users []User
 	if err := db.Find(&users).Error; err != nil {
 		logrus.WithError(err).Error("Error when querying users")
 		return err
 	}
 
-	for _, user := range users {
-		m := gomail.NewMessage()
-		m.SetHeader("From", "waxansar99@gmail.com")
-		m.SetHeader("To", user.Email)
-		m.SetHeader("Subject", "Newsletter")
-		m.SetBody("text/plain", message)
-
-		d := gomail.NewDialer("smtp.gmail.com", 587, "waxansar99@gmail.com", "nhmj faiz kysy owks")
-
-		if err := d.DialAndSend(m); err != nil {
-			logrus.WithError(err).WithField("username", user.Username).Error("Error when sending email to user")
-			continue
-		}
-
+	numGoroutines := 2
+	fmt.Println(len(users), "USERS!")
+	chunkSize := len(users) / numGoroutines
+	if len(users)%numGoroutines != 0 {
+		chunkSize++
 	}
 
-	logrus.Info("Message is successfully sent to all users")
+	chunks := make([][]User, numGoroutines)
+	for i := range chunks {
+		start := i * chunkSize
+		end := start + chunkSize
+		if end > len(users) {
+			end = len(users)
+		}
+		chunks[i] = users[start:end]
+	}
+
+	var wg sync.WaitGroup
+	wg.Add(numGoroutines)
+
+	for _, chunk := range chunks {
+		go func(usersChunk []User) {
+			defer wg.Done()
+
+			for _, user := range usersChunk {
+				m := gomail.NewMessage()
+				m.SetHeader("From", "waxansar99@gmail.com")
+				m.SetHeader("To", user.Email)
+				m.SetHeader("Subject", "Newsletter")
+				m.SetBody("text/plain", message)
+
+				d := gomail.NewDialer("smtp.gmail.com", 587, "waxansar99@gmail.com", emailPassword)
+
+				if err := d.DialAndSend(m); err != nil {
+					logrus.WithError(err).WithField("username", user.Username).Error("Error when sending email to user")
+					continue
+				}
+			}
+		}(chunk)
+	}
+
+	wg.Wait()
+
+	endTime := time.Now()
+	executionTime := endTime.Sub(startTime)
+	logrus.Info("Message is successfully sent to all users", executionTime)
 	return nil
 }
 
@@ -424,6 +476,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 		if comparePasswords(user.Password, password) {
 			if user.IsVerified {
 				token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+					"id":       user.ID,
 					"username": user.Username,
 					"role":     user.Role,
 					"exp":      time.Now().Add(time.Hour * 24).Unix(),
@@ -885,6 +938,42 @@ func serveTravelPage(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, filePath)
 }
 
+func serveChatPage(w http.ResponseWriter, r *http.Request) {
+	logger.WithFields(logrus.Fields{
+		"module": "main",
+	}).Info("User visits chat  page")
+	filePath := filepath.Join("view", "chat.html")
+
+	id, err := ExtractUserID(r)
+	if err != nil {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	parts := strings.Split(r.URL.Path, "/")
+	chatID := parts[len(parts)-1]
+
+	var chat Chat
+	err = db.Where("id = ?", chatID).First(&chat).Error
+	if err != nil {
+		http.Error(w, "Chat not found", http.StatusNotFound)
+		return
+	}
+
+	var user User
+	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	if user.ID != chat.ClientID && user.ID != chat.AdminID {
+		http.Error(w, "Access denied", http.StatusForbidden)
+		return
+	}
+
+	http.ServeFile(w, r, filePath)
+}
+
 func serveToursPage(w http.ResponseWriter, r *http.Request) {
 	logger.WithFields(logrus.Fields{
 		"module": "main",
@@ -955,6 +1044,326 @@ func roleMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+// websocket handler
+func chatHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := ExtractUserID(r)
+	if err != nil {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	var user User
+	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	isAdmin := user.Role == "admin"
+
+	if isAdmin {
+		http.Redirect(w, r, "/admin", http.StatusSeeOther)
+		return
+	}
+
+	userChatHandler(w, r, &user)
+}
+
+func userChatHandler(w http.ResponseWriter, r *http.Request, user *User) {
+	var chat Chat
+	if user.ChatID == "" {
+		chatID := uuid.New().String()
+		chat = Chat{ID: chatID, ClientID: user.ID, AdminID: 0, Closed: false}
+
+		user.ChatID = chatID
+		if err := db.Save(&user).Error; err != nil {
+			http.Error(w, "Failed to save chat for user", http.StatusInternalServerError)
+			return
+		}
+
+		if err := db.Create(&chat).Error; err != nil {
+			http.Error(w, "Failed to create chat", http.StatusInternalServerError)
+			return
+		}
+	} else {
+		if err := db.Where("id = ?", user.ChatID).First(&chat).Error; err != nil {
+			http.Error(w, "Failed to find chat", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	logger.Infof("User %s has entered a chat with ID %s", user.Username, chat.ID)
+	http.Redirect(w, r, "/chat/"+user.ChatID, http.StatusSeeOther)
+}
+
+func adminChatMiddleware(w http.ResponseWriter, r *http.Request) {
+	id, err := ExtractUserID(r)
+	if err != nil {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	var user User
+	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	parts := strings.Split(r.URL.Path, "/")
+	chatID := parts[len(parts)-1]
+
+	var chat Chat
+	err = db.Where("id = ?", chatID).First(&chat).Error
+	if err != nil {
+		http.Error(w, "Chat not found", http.StatusNotFound)
+		return
+	}
+
+	if chat.AdminID == 0 {
+
+		chat.AdminID = uint(id)
+		fmt.Println(id)
+		if err := db.Save(&chat).Error; err != nil {
+			http.Error(w, "Failed to update chat", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	logger.Infof("Admin %s has entered a chat with ID %s", user.Username, chat.ID)
+	http.Redirect(w, r, "/chat/"+chatID, http.StatusSeeOther)
+}
+
+func getAccessibleChats(w http.ResponseWriter, r *http.Request) {
+	adminID, err := ExtractUserID(r)
+	if err != nil {
+		http.Error(w, "Token Error", http.StatusUnauthorized)
+		return
+	}
+
+	chats, err := findAccessibleChats(db, adminID)
+	if err != nil {
+		http.Error(w, "Error retrieving chats", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(chats); err != nil {
+		http.Error(w, "Error encoding response", http.StatusInternalServerError)
+	}
+}
+
+func findAccessibleChats(db *gorm.DB, adminID float64) ([]Chat, error) {
+	var chats []Chat
+	if err := db.Where("admin_id = ? OR admin_id = 0", adminID).Find(&chats).Error; err != nil {
+		return nil, err
+	}
+	return chats, nil
+}
+
+func ExtractUserID(r *http.Request) (float64, error) {
+	cookie, err := r.Cookie("jwt")
+	if err != nil {
+		return -1, err
+	}
+	tokenString := cookie.Value
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(secret), nil
+	})
+
+	if err != nil || !token.Valid {
+		return -1, errors.New("invalid token")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		return -1, errors.New("invalid token claims")
+	}
+
+	userID, ok := claims["id"].(float64)
+	if !ok {
+		return -1, errors.New("user ID not found in token")
+	}
+
+	return userID, nil
+}
+
+// websocket connection
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
+
+var mu sync.Mutex
+
+var userConns = make(map[float64]*websocket.Conn)
+var adminConns = make(map[float64]*websocket.Conn)
+
+func handleUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("User reached WS")
+	userID, err := ExtractUserID(r) // Предположим, что у вас есть функция для извлечения ID администратора из запроса
+	if err != nil {
+		http.Error(w, "Admin ID not found", http.StatusBadRequest)
+		return
+	}
+
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		http.Error(w, "Error creating WebSocket connection", http.StatusInternalServerError)
+		return
+	}
+
+	mu.Lock()
+	userConns[userID] = conn
+	mu.Unlock()
+
+	defer func() {
+		mu.Lock()
+		delete(userConns, userID)
+		mu.Unlock()
+		conn.Close()
+	}()
+
+	parts := strings.Split(r.URL.Path, "/")
+	chatID := parts[len(parts)-1]
+
+	var chat Chat
+	err = db.Where("id = ?", chatID).First(&chat).Error
+	if err != nil {
+		http.Error(w, "Chat not found", http.StatusNotFound)
+		return
+	}
+
+	for {
+		_, msg, err := conn.ReadMessage()
+		if err != nil {
+			conn.Close()
+			break
+		}
+		if string(msg) == "close" {
+			conn.Close()
+			break
+		}
+
+		mu.Lock()
+		adminConn := adminConns[float64(chat.AdminID)]
+		mu.Unlock()
+
+		if adminConn != nil {
+			if err := adminConn.WriteMessage(websocket.TextMessage, msg); err != nil {
+				conn.Close()
+				break
+			}
+		}
+	}
+}
+
+// Функция для обработки соединений администраторов
+func handleAdmin(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Admin reached WS")
+	adminID, err := ExtractUserID(r) // Предположим, что у вас есть функция для извлечения ID администратора из запроса
+	if err != nil {
+		http.Error(w, "Admin ID not found", http.StatusBadRequest)
+		return
+	}
+
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		http.Error(w, "Error creating WebSocket connection", http.StatusInternalServerError)
+		return
+	}
+
+	parts := strings.Split(r.URL.Path, "/")
+	chatID := parts[len(parts)-1]
+
+	var chat Chat
+	err = db.Where("id = ?", chatID).First(&chat).Error
+	if err != nil {
+		http.Error(w, "Chat not found", http.StatusNotFound)
+		return
+	}
+
+	mu.Lock()
+	adminConns[adminID] = conn
+	mu.Unlock()
+
+	defer func() {
+		mu.Lock()
+		delete(adminConns, adminID)
+		mu.Unlock()
+		conn.Close()
+	}()
+
+	for {
+		_, msg, err := conn.ReadMessage()
+		if err != nil {
+			conn.Close()
+			break
+		}
+		if string(msg) == "close" {
+			conn.Close()
+			break
+		}
+
+		mu.Lock()
+		userConn := userConns[float64(chat.ClientID)]
+		mu.Unlock()
+
+		if userConn != nil {
+			if err := userConn.WriteMessage(websocket.TextMessage, msg); err != nil {
+				userConn.Close()
+			}
+		}
+	}
+}
+
+func ExtractUserRole(r *http.Request) (string, error) {
+	// Получаем cookie с именем "jwt"
+	cookie, err := r.Cookie("jwt")
+	if err != nil {
+		return "", err
+	}
+	tokenString := cookie.Value
+
+	// Парсим JWT токен
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Проверяем метод подписи токена
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(secret), nil
+	})
+
+	if err != nil || !token.Valid {
+		return "", errors.New("invalid token")
+	}
+
+	// Извлекаем claims из токена
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		return "", errors.New("invalid token claims")
+	}
+
+	// Извлекаем роль пользователя из claims
+	role, ok := claims["role"].(string)
+	if !ok {
+		return "", errors.New("role not found in token")
+	}
+
+	return role, nil
+}
+
+func getRole(w http.ResponseWriter, r *http.Request) {
+	role, err := ExtractUserRole(r)
+	if err != nil {
+		http.Error(w, "Error extracting role", http.StatusInternalServerError)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"role": role})
+}
+
 func main() {
 	initLogger()
 	initDB()
@@ -974,6 +1383,8 @@ func main() {
 	adminRouter.HandleFunc("/getAllUsers", getAllUsers).Methods("GET")
 	adminRouter.HandleFunc("/addUser", registration).Methods("POST")
 	adminRouter.HandleFunc("/newsletter", sendEmail).Methods("POST")
+	adminRouter.HandleFunc("/chats", getAccessibleChats).Methods("GET")
+	adminRouter.HandleFunc("/chats/{chat_id}", adminChatMiddleware).Methods("GET")
 
 	//login
 	r.HandleFunc("/login", serveLoginPage).Methods("GET")
@@ -991,7 +1402,12 @@ func main() {
 	travelRouter.HandleFunc("/tours", serveToursPage).Methods("GET")
 	travelRouter.HandleFunc("/search", searchHandler).Methods("GET")
 	travelRouter.HandleFunc("/data", getData).Methods("GET")
-
+	// WebSocket
+	r.HandleFunc("/chat", chatHandler).Methods("GET")
+	r.HandleFunc("/getrole", getRole).Methods("GET")
+	r.HandleFunc("/chat/{chat_id}", serveChatPage).Methods("GET")
+	r.HandleFunc("/ws/user/{chat_id}", handleUser)
+	r.HandleFunc("/ws/admin/{chat_id}", handleAdmin)
 	//static files
 	r.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 	fmt.Println("Server is listening on :8080...")
