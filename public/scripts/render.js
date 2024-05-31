@@ -92,6 +92,7 @@ async function renderCart(data) {
                                 ${tour.children > 0 ? `<div class="children">&#x1F9D2: ${tour.children}</div>` : ''}
                             </div>
                             <div class="item-price">Total Price: <span class="tour-price">${tour.price}</span>$</div>
+                            <div class="reserve-button" onclick="reserveTour(this)">Reservation</div>
                         </div> 
                     </div>
                 </div>
@@ -197,4 +198,32 @@ function alertMSG(msg, alertType) {
     }, 2000)
 
     appendAlert(msg, alertType);
+}
+
+function reserveTour(button) {
+    const tourElement = button.closest('.tour-container');
+    
+    if (tourElement) {
+        const hotel = tourElement.querySelector('.item-hotel').textContent;
+        const country = tourElement.querySelector('.tour-country').textContent;
+        const city = tourElement.querySelector('.tour-city').textContent.trim();
+        const dateArrival = tourElement.querySelector('.date-arrival').textContent.trim();
+        const dateDeparture = tourElement.querySelector('.departure .date-arrival').textContent.trim();
+        const adults = tourElement.querySelector('.adults').textContent.trim();
+        const children = tourElement.querySelector('.children') ? tourElement.querySelector('.children').textContent.trim() : '0';
+        const price = tourElement.querySelector('.tour-price').textContent.trim();
+        
+        const tourData = {
+            hotel,
+            country,
+            city,
+            dateArrival,
+            dateDeparture,
+            adults,
+            children,
+            price
+        };
+        console.log(tourData);
+        
+    }
 }

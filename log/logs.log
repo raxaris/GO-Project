@@ -1542,3 +1542,157 @@
 {"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T01:54:16+05:00"}
 {"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T01:54:20+05:00"}
 {"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T01:54:22+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-05-24T14:53:38+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T14:53:48+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T14:53:52+05:00"}
+{"level":"info","msg":"User user has entered a chat with ID ae1b2d56-a71f-4023-b40d-a53e987a002c","time":"2024-05-24T14:54:24+05:00"}
+{"level":"info","module":"main","msg":"Admin visits admin page","time":"2024-05-24T14:54:40+05:00"}
+{"level":"info","module":"main","msg":"Admin visits admin page","time":"2024-05-24T14:54:46+05:00"}
+{"level":"info","module":"main","msg":"User visits login page","time":"2024-05-24T14:55:03+05:00"}
+{"function":"login","level":"info","module":"main","msg":"Login request","time":"2024-05-24T14:55:10+05:00"}
+{"function":"login","level":"info","module":"main","msg":"User successfully logged in","time":"2024-05-24T14:55:10+05:00"}
+{"level":"info","module":"main","msg":"Admin visits admin page","time":"2024-05-24T14:57:29+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T14:58:02+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T14:58:04+05:00"}
+{"level":"info","msg":"User beka has entered a chat with ID 99293d56-9ce8-4eb5-a10a-15989d2f3f25","time":"2024-05-24T14:58:28+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T14:58:28+05:00"}
+{"level":"info","msg":"User beka has entered a chat with ID 99293d56-9ce8-4eb5-a10a-15989d2f3f25","time":"2024-05-24T14:58:32+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T14:58:42+05:00"}
+{"level":"info","msg":"User user has entered a chat with ID ae1b2d56-a71f-4023-b40d-a53e987a002c","time":"2024-05-24T14:59:20+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T15:00:27+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T15:00:28+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T15:00:29+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T15:01:01+05:00"}
+{"level":"info","module":"main","msg":"User visits login page","time":"2024-05-24T15:17:12+05:00"}
+{"function":"login","level":"info","module":"main","msg":"Login request","time":"2024-05-24T15:17:18+05:00"}
+{"function":"login","level":"info","module":"main","msg":"User successfully logged in","time":"2024-05-24T15:17:18+05:00"}
+{"level":"info","module":"main","msg":"Admin visits admin page","time":"2024-05-24T15:17:27+05:00"}
+{"level":"info","module":"main","msg":"Admin visits admin page","time":"2024-05-24T15:26:26+05:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-05-24T15:26:26+05:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-05-24T15:26:26+05:00"}
+{"level":"info","msg":"Admin admin has entered a chat with ID ae1b2d56-a71f-4023-b40d-a53e987a002c","time":"2024-05-24T15:26:30+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-05-24T17:18:46+05:00"}
+{"level":"info","module":"main","msg":"User visits home page","time":"2024-05-24T17:20:58+05:00"}
+{"level":"info","module":"main","msg":"User visits login page","time":"2024-05-24T19:39:26+05:00"}
+{"function":"login","level":"info","module":"main","msg":"Login request","time":"2024-05-24T19:39:31+05:00"}
+{"function":"login","level":"info","module":"main","msg":"User successfully logged in","time":"2024-05-24T19:39:31+05:00"}
+{"level":"info","msg":"User user has entered a chat with ID ae1b2d56-a71f-4023-b40d-a53e987a002c","time":"2024-05-24T19:42:27+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T19:42:27+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T19:42:30+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T19:42:31+05:00"}
+{"level":"info","module":"main","msg":"Admin visits admin page","time":"2024-05-24T19:42:34+05:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-05-24T19:42:34+05:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-05-24T19:42:34+05:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-05-24T19:42:44+05:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-05-24T19:42:44+05:00"}
+{"level":"info","msg":"Admin admin has entered a chat with ID ae1b2d56-a71f-4023-b40d-a53e987a002c","time":"2024-05-24T19:42:49+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T19:43:07+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T19:43:35+05:00"}
+{"level":"info","msg":"User user has entered a chat with ID 14fb8ad9-7161-4b1d-8a6c-10867e777ba6","time":"2024-05-24T19:43:46+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T19:43:46+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-05-24T19:48:33+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T19:48:45+05:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-05-24T19:49:41+05:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-05-24T19:49:41+05:00"}
+{"level":"info","msg":"Admin admin has entered a chat with ID ae1b2d56-a71f-4023-b40d-a53e987a002c","time":"2024-05-24T20:05:25+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T20:05:25+05:00"}
+{"level":"info","msg":"Admin admin has entered a chat with ID 14fb8ad9-7161-4b1d-8a6c-10867e777ba6","time":"2024-05-24T20:05:38+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T20:05:38+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T20:05:47+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T20:05:48+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T20:05:52+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T20:06:01+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T20:06:02+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T20:06:37+05:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-05-24T20:06:45+05:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-05-24T20:06:45+05:00"}
+{"level":"info","msg":"User user has entered a chat with ID cd56cd58-663e-4214-a1ab-ee57f899c516","time":"2024-05-24T20:06:57+05:00"}
+{"level":"info","module":"main","msg":"User visits chat  page","time":"2024-05-24T20:06:57+05:00"}
+{"level":"info","msg":"User user has entered a chat with ID cd56cd58-663e-4214-a1ab-ee57f899c516","time":"2024-05-24T20:07:45+05:00"}
+{"level":"info","msg":"User user has entered a chat with ID cd56cd58-663e-4214-a1ab-ee57f899c516","time":"2024-05-24T20:09:41+05:00"}
+{"level":"info","module":"main","msg":"Admin visits admin page","time":"2024-05-24T20:14:25+05:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Admin requested all users' data","time":"2024-05-24T20:14:25+05:00"}
+{"function":"getAllUsers","level":"info","module":"main","msg":"Data was succesfully sent","time":"2024-05-24T20:14:25+05:00"}
+{"level":"info","module":"main","msg":"User visits home page","time":"2024-05-24T20:14:31+05:00"}
+{"level":"info","msg":"User user has entered a chat with ID cd56cd58-663e-4214-a1ab-ee57f899c516","time":"2024-05-24T20:14:33+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-05-31T11:35:32+05:00"}
+{"level":"info","module":"main","msg":"User visits travel page","time":"2024-05-31T11:35:52+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:35:59+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:35:59+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:35:59+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:36:03+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:39:09+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:39:09+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:39:09+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:39:13+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:39:30+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:39:30+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:39:30+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:39:35+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:40:59+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:41:00+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:41:00+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:41:02+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:41:04+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:41:05+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:41:05+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:41:07+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:46:29+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:46:29+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:46:29+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:46:33+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:47:14+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:47:14+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:47:14+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:47:17+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:47:35+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:47:35+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:47:35+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:47:38+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:48:21+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:48:22+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:48:22+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:48:24+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:48:58+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:48:58+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:48:58+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:49:01+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:49:08+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:49:08+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:49:08+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:49:11+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:49:23+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:49:23+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:49:23+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:49:26+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:56:38+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:56:39+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:56:39+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:56:39+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:57:22+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:57:22+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:57:22+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:57:26+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:57:47+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:57:47+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T11:57:58+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:57:58+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:57:58+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:58:00+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:58:06+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:58:06+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:58:07+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:58:07+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:58:08+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:58:08+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:58:08+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:58:08+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:58:09+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:58:09+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T11:58:10+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T11:58:10+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T11:58:11+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T12:13:41+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T12:13:42+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T12:13:42+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T12:13:45+05:00"}

@@ -665,7 +665,6 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 			"module":   "main",
 			"function": "searchHandler",
 		}).Info("Tours were found")
-
 		responseSuccess(w, "Tours found", matchingTours)
 	}
 }
@@ -946,9 +945,13 @@ func serveChatPage(w http.ResponseWriter, r *http.Request) {
 	}).Info("User visits chat  page")
 	filePath := filepath.Join("view", "chat.html")
 
-	_, _, err := checkAccess(w, r)
+	_, chat, err := checkAccess(w, r)
 	if err != nil {
 		return
+	}
+
+	if chat.Closed {
+		responseError(w, 404, "Chat is unavailable")
 	}
 
 	http.ServeFile(w, r, filePath)
@@ -1426,6 +1429,40 @@ func checkAccess(w http.ResponseWriter, r *http.Request) (*User, *Chat, error) {
 	return &user, &chat, nil
 }
 
+func closeChat(w http.ResponseWriter, r *http.Request) {
+	_, chat, err := checkAccess(w, r)
+	if err != nil {
+		http.Error(w, "Error extracting chat", http.StatusInternalServerError)
+		return
+	}
+
+	userID := chat.ClientID
+	var user User
+	if err := db.First(&user, userID).Error; err != nil {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	// Установка флага "Closed" для чата
+	chat.Closed = true
+	if err := db.Save(chat).Error; err != nil {
+		http.Error(w, "Error closing chat", http.StatusInternalServerError)
+		return
+	}
+
+	// Удаление ссылки на чат у пользователя
+	user.ChatID = ""
+	if err := db.Save(user).Error; err != nil {
+		http.Error(w, "Error updating user", http.StatusInternalServerError)
+		return
+	}
+
+	// Возвращаем успешный ответ клиенту
+	responseSuccess(w, "Chat closed", nil)
+}
+
+//
+
 func main() {
 	initLogger()
 	initDB()
@@ -1447,6 +1484,7 @@ func main() {
 	adminRouter.HandleFunc("/newsletter", sendEmail).Methods("POST")
 	adminRouter.HandleFunc("/chats", getAccessibleChats).Methods("GET")
 	adminRouter.HandleFunc("/chats/{chat_id}", adminChatMiddleware).Methods("GET")
+	adminRouter.HandleFunc("/close/{chat_id}", closeChat).Methods("GET")
 
 	//login
 	r.HandleFunc("/login", serveLoginPage).Methods("GET")
@@ -1464,6 +1502,7 @@ func main() {
 	travelRouter.HandleFunc("/tours", serveToursPage).Methods("GET")
 	travelRouter.HandleFunc("/search", searchHandler).Methods("GET")
 	travelRouter.HandleFunc("/data", getData).Methods("GET")
+	travelRouter.HandleFunc("/order", getData).Methods("GET")
 	// WebSocket
 	r.HandleFunc("/chat", chatHandler).Methods("GET")
 	r.HandleFunc("/getrole", getRole).Methods("GET")
