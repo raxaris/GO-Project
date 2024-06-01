@@ -1696,3 +1696,219 @@
 {"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T12:13:42+05:00"}
 {"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T12:13:42+05:00"}
 {"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T12:13:45+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-05-31T13:54:10+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T13:57:11+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T13:57:11+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T13:57:11+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T13:57:13+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T13:58:08+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T13:58:08+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T13:58:08+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T13:58:09+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T13:59:10+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T13:59:10+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T13:59:10+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T13:59:15+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-05-31T14:00:08+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T14:00:11+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T14:00:12+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T14:00:12+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T14:00:13+05:00"}
+{"level":"info","module":"main","msg":"User visits registration page","time":"2024-05-31T14:00:21+05:00"}
+{"level":"info","module":"main","msg":"User visits login page","time":"2024-05-31T14:00:25+05:00"}
+{"function":"login","level":"info","module":"main","msg":"Login request","time":"2024-05-31T14:00:30+05:00"}
+{"function":"login","level":"info","module":"main","msg":"User successfully logged in","time":"2024-05-31T14:00:30+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T14:00:36+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T14:00:37+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T14:00:37+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T14:00:40+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-05-31T14:02:27+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T14:02:28+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T14:02:28+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T14:02:30+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-05-31T14:06:53+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T15:12:10+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T15:12:10+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-05-31T15:12:17+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-05-31T15:12:17+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T15:12:48+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-05-31T15:13:59+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T10:25:17+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T10:30:48+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T10:30:48+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T10:31:33+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T10:35:45+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T10:35:46+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T10:35:47+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T10:35:47+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T10:36:16+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T10:36:17+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T10:36:17+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T10:36:32+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T10:37:06+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T10:37:19+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T10:37:20+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T10:37:20+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T10:37:50+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T10:40:32+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T10:40:49+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T10:40:51+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T10:40:51+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T10:41:01+05:00"}
+{"level":"info","msg":"User 17.000000 has opened an order with ID f4ab4df9-e7e4-4738-b6f6-6b0d7a251b78","time":"2024-06-01T10:41:06+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T11:47:56+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T11:48:25+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T11:49:11+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T11:49:11+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T11:49:57+05:00"}
+{"level":"info","msg":"User 17.000000 has opened an order with ID 00823682-8cc5-4e20-992f-5f3cde10afc0","time":"2024-06-01T11:51:06+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T12:07:17+05:00"}
+{"level":"info","module":"main","msg":"User visits login page","time":"2024-06-01T12:17:20+05:00"}
+{"function":"login","level":"info","module":"main","msg":"Login request","time":"2024-06-01T12:17:31+05:00"}
+{"function":"login","level":"info","module":"main","msg":"User successfully logged in","time":"2024-06-01T12:17:32+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T12:17:38+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T12:17:38+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T12:17:39+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID aaa4ab04-51e5-49ff-afac-1227972df56a","time":"2024-06-01T12:17:45+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T12:21:41+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T12:21:42+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T12:21:42+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T12:21:42+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 52594ebc-8368-4f56-b268-db3020ebc856","time":"2024-06-01T12:21:49+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T12:22:45+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T12:22:50+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T12:22:51+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T12:22:51+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T12:24:02+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 25421d44-8e2c-48d5-bfe6-aded7d6ccf15","time":"2024-06-01T12:24:08+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T12:24:29+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 5eb2f17f-4a2c-43dc-89c4-41a51c63094c","time":"2024-06-01T12:25:07+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T12:26:16+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T12:26:18+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T12:26:18+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T12:26:23+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T12:26:28+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T12:26:29+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T12:26:29+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T12:27:00+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T12:27:01+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T12:27:01+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T12:27:23+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T12:27:32+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T12:27:33+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T12:27:33+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T12:27:47+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T12:27:51+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID d55700b5-4f5d-405b-ae8a-e16cc9d9a426","time":"2024-06-01T12:27:56+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T12:28:09+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T12:28:14+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T12:28:16+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T12:28:16+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T12:28:48+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 862eda18-e935-4515-92da-9d42229e8459","time":"2024-06-01T12:28:51+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T12:32:19+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T12:32:23+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T12:32:24+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T12:32:24+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T12:33:56+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID c34a8430-a093-4275-97a8-e535b319c0b6","time":"2024-06-01T12:34:10+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T12:35:08+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 8fd18ce5-8861-49f1-9cb9-c8ce3db33244","time":"2024-06-01T12:35:40+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T12:37:27+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T12:37:28+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T12:37:28+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T12:37:29+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID e1cb8c96-5671-476b-b3bd-dfff5b1fd780","time":"2024-06-01T12:37:35+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 6c89b63e-6dc2-451d-a58b-b659a52cd847","time":"2024-06-01T12:38:40+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T12:40:16+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T12:41:44+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 92b576ff-d385-4cad-ac58-ff31b20aa675","time":"2024-06-01T12:41:50+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 3433c113-000e-4234-aefe-1c97b67754b7","time":"2024-06-01T12:41:55+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T12:42:24+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 15fbe825-b6e1-4a8c-b150-0151c47073d3","time":"2024-06-01T12:42:30+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T12:43:21+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 307ca4d1-2751-45a2-bc94-f44d8561a65c","time":"2024-06-01T12:43:27+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T12:44:52+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID d105ab8e-3014-49d5-88ae-0779468ce75f","time":"2024-06-01T12:44:57+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T12:44:57+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T12:45:03+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T12:45:05+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T12:45:05+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T12:45:25+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T12:45:28+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T12:47:49+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T12:48:33+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T12:48:33+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T12:48:37+05:00"}
+{"level":"info","msg":"User %!d(float64=24) has opened an order with ID 869ec481-3ba4-4186-99e0-dbec2ee67e52","time":"2024-06-01T12:48:42+05:00"}
+{"level":"info","msg":"Redirecting to /payment/869ec481-3ba4-4186-99e0-dbec2ee67e52","time":"2024-06-01T12:48:43+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T12:48:43+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T13:00:33+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T13:00:34+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T13:00:34+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T13:00:43+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T13:00:54+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T13:00:55+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T13:00:55+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T13:01:36+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID a15f07ba-eb56-4d9e-8b7e-090d1d1db542","time":"2024-06-01T13:01:44+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T13:01:44+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T13:03:04+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T13:03:07+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T13:03:07+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T13:04:28+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID dc44baee-d639-4d49-80e5-058d9226687b","time":"2024-06-01T13:04:32+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID fa3c6288-b48d-4b45-9c4e-6efc1b7641d4","time":"2024-06-01T13:04:54+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T13:04:58+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T13:04:59+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T13:04:59+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T13:05:37+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 8ccda261-fde7-4a65-8fe2-2d879ae1feb6","time":"2024-06-01T13:05:42+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T13:05:42+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T13:10:44+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 6c94aa1d-ef2e-466b-99ec-689b7873c326","time":"2024-06-01T13:10:53+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T13:11:26+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T13:11:27+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T13:11:27+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T13:12:13+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 139c5684-c2d1-4eff-90df-2b5633a46ce8","time":"2024-06-01T13:12:19+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T13:13:06+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID e2a9e1e9-e22d-421a-b7c9-fde3b3d639e5","time":"2024-06-01T13:13:13+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID f90f51a7-dbca-4f91-b29a-621ab5f75dfe","time":"2024-06-01T13:13:16+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T13:16:26+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 91fc3c63-0ed2-4f58-8be4-ad9c73a5e62f","time":"2024-06-01T13:16:32+05:00"}
+{"level":"info","module":"main","msg":"User visits tours page","time":"2024-06-01T13:17:27+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T13:17:29+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T13:17:29+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T16:29:31+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T19:45:06+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T19:45:19+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T19:45:19+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T19:45:23+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 07e9fc62-5b44-4de2-b4d7-28fe9b80c1db","time":"2024-06-01T19:45:35+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T19:45:35+05:00"}
+{"function":"initDB","level":"info","module":"main","msg":"Database sucessfully connected","time":"2024-06-01T20:23:42+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T20:26:43+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T20:26:52+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T20:27:01+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T20:27:40+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T20:27:54+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T20:29:01+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T20:29:03+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T20:29:15+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T20:34:51+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T20:45:15+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T20:46:54+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T20:50:19+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T20:51:52+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T20:58:00+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T21:06:39+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T21:06:55+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T21:11:54+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T21:14:52+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T21:15:18+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"User requests tours data","time":"2024-06-01T21:15:46+05:00"}
+{"arrival":"","city":"","country":"","departure":"","hotel":"","level":"info","msg":"User request","sort":"","time":"2024-06-01T21:15:46+05:00"}
+{"function":"searchHandler","level":"info","module":"main","msg":"Tours were found","time":"2024-06-01T21:15:50+05:00"}
+{"level":"info","msg":"User 24.000000 has opened an order with ID 8333f73a-efe9-4564-95c6-c01dbc762702","time":"2024-06-01T21:17:36+05:00"}
+{"level":"info","module":"main","msg":"User visits order page","time":"2024-06-01T21:17:36+05:00"}

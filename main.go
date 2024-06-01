@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -113,7 +114,7 @@ func initDB() {
 		"module":   "main",
 		"function": "initDB",
 	}).Info("Database sucessfully connected")
-	db.AutoMigrate(&User{}, &Chat{}, &Message{})
+	db.AutoMigrate(&User{}, &Chat{}, &Message{}, &Order{})
 }
 
 // logger
@@ -1461,7 +1462,137 @@ func closeChat(w http.ResponseWriter, r *http.Request) {
 	responseSuccess(w, "Chat closed", nil)
 }
 
-//
+// Transactions
+type Order struct {
+	gorm.Model
+	ID                string  `json:"id"`
+	ClientID          uint    `json:"clientId"`
+	Hotel             string  `json:"hotel"`
+	Country           string  `json:"country"`
+	City              string  `json:"city"`
+	DateArrival       string  `json:"dateArrival"`
+	DateDeparture     string  `json:"dateDeparture"`
+	Adults            int     `json:"adults"`
+	Children          int     `json:"children"`
+	Price             float64 `json:"price"`
+	TransactionStatus string  `json:"transactionStatus"`
+}
+
+func orderHandler(w http.ResponseWriter, r *http.Request) {
+	userID, err := ExtractUserID(r)
+	if err != nil {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	var order Order
+	orderID := uuid.New().String()
+	err = json.NewDecoder(r.Body).Decode(&order)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if order.Hotel == "" || order.Country == "" || order.City == "" ||
+		order.DateArrival == "" || order.DateDeparture == "" ||
+		order.Adults <= 0 || order.Price <= 0.0 {
+		http.Error(w, "Invalid order data", http.StatusBadRequest)
+		return
+	}
+
+	order.ID = orderID
+	order.ClientID = uint(userID)
+	order.TransactionStatus = "Pending"
+
+	fmt.Print(order)
+
+	result := db.Create(&order)
+	if result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	logger.Infof("User %f has opened an order with ID %s", userID, orderID)
+
+	responseSuccess(w, "Order created", map[string]interface{}{"orderID": orderID})
+}
+
+type PaymentData struct {
+	CardNumber string  `json:"cardNumber"`
+	CardName   string  `json:"cardName"`
+	ExpiryDate string  `json:"expiryDate"`
+	CVV        string  `json:"cvv"`
+	Price      float64 `json:"price"`
+	Email      string  `json:"email"`
+}
+
+func paymentTransactionHandler(w http.ResponseWriter, r *http.Request) {
+	userID, err := ExtractUserID(r)
+	if err != nil {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	var user User
+	if err := db.Where("id = ?", userID).First(&user).Error; err != nil {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	parts := strings.Split(r.URL.Path, "/")
+	orderID := parts[len(parts)-1]
+
+	var order Order
+	if err := db.Where("id = ?", orderID).First(&order).Error; err != nil {
+		http.Error(w, "Order not found", http.StatusNotFound)
+		return
+	}
+
+	var paymentData PaymentData
+	if err := json.NewDecoder(r.Body).Decode(&paymentData); err != nil {
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+
+	paymentData.Price = order.Price
+	paymentData.Email = user.Email
+
+	err = sendPaymentRequest(paymentData)
+	if err != nil {
+		http.Error(w, "Microservice error", http.StatusInternalServerError)
+	}
+
+	order.TransactionStatus = "Finished"
+	responseSuccess(w, "Transaction sent successfully", nil)
+}
+
+func sendPaymentRequest(paymentData PaymentData) error {
+	jsonData, err := json.Marshal(paymentData)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Sending data to microservice")
+	resp, err := http.Post("http://localhost:8081/process-payment", "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("payment service responded with status: %s", resp.Status)
+	}
+
+	return nil
+}
+
+func serveOrderPage(w http.ResponseWriter, r *http.Request) {
+	logger.WithFields(logrus.Fields{
+		"module": "main",
+	}).Info("User visits order page")
+	filePath := filepath.Join("view", "order.html")
+	http.ServeFile(w, r, filePath)
+}
 
 func main() {
 	initLogger()
@@ -1502,7 +1633,8 @@ func main() {
 	travelRouter.HandleFunc("/tours", serveToursPage).Methods("GET")
 	travelRouter.HandleFunc("/search", searchHandler).Methods("GET")
 	travelRouter.HandleFunc("/data", getData).Methods("GET")
-	travelRouter.HandleFunc("/order", getData).Methods("GET")
+	travelRouter.HandleFunc("/order", orderHandler).Methods("POST")
+	travelRouter.HandleFunc("/order/{order_id}", paymentTransactionHandler).Methods("POST")
 	// WebSocket
 	r.HandleFunc("/chat", chatHandler).Methods("GET")
 	r.HandleFunc("/getrole", getRole).Methods("GET")
@@ -1511,6 +1643,8 @@ func main() {
 	r.HandleFunc("/chat/{chat_id}", serveChatPage).Methods("GET")
 	r.HandleFunc("/ws/user/{chat_id}", handleUser)
 	r.HandleFunc("/ws/admin/{chat_id}", handleAdmin)
+	//payment
+	r.HandleFunc("/payment/{order_id}", serveOrderPage)
 	//static files
 	r.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 	fmt.Println("Server is listening on :8080...")

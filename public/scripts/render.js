@@ -209,9 +209,14 @@ function reserveTour(button) {
         const city = tourElement.querySelector('.tour-city').textContent.trim();
         const dateArrival = tourElement.querySelector('.date-arrival').textContent.trim();
         const dateDeparture = tourElement.querySelector('.departure .date-arrival').textContent.trim();
-        const adults = tourElement.querySelector('.adults').textContent.trim();
-        const children = tourElement.querySelector('.children') ? tourElement.querySelector('.children').textContent.trim() : '0';
-        const price = tourElement.querySelector('.tour-price').textContent.trim();
+        const adultsText = tourElement.querySelector('.adults').textContent.trim();
+        const adults = parseInt(adultsText.replace(/\D/g, ''), 10);
+
+        const childrenText = tourElement.querySelector('.children') ? tourElement.querySelector('.children').textContent.trim() : '0';
+        const children = parseInt(childrenText.replace(/\D/g, ''), 10);
+
+        const priceText = tourElement.querySelector('.tour-price').textContent.trim();
+        const price = parseFloat(priceText.replace(/[^0-9.-]+/g, ''));
         
         const tourData = {
             hotel,
@@ -224,6 +229,30 @@ function reserveTour(button) {
             price
         };
         console.log(tourData);
-        
+        console.log(JSON.stringify(tourData))
+        fetch('http://localhost:8080/travel/order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(tourData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data.data)
+            const orderID = data.data.orderID
+            if (orderID == undefined) {
+                throw new Error('Undefined order ID');
+            }
+            window.location.href = `http://localhost:8080/payment/${orderID}`;
+        })
+        .catch(error => {
+            console.error('Error sending data', error);
+        });
     }
 }
